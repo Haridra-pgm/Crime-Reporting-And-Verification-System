@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crime Reporting & Verification System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+    body {
+        background: #f4f6f9;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* ===== HERO SECTION WITH ANIMATION ===== */
+    .hero-section {
+        margin-top: 130px;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        padding: 80px 20px;
+        color: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Floating circles animation */
+    .floating-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        animation: floatUp 10s infinite linear;
+    }
+
+    .circle1 { width: 120px; height: 120px; left: 5%; bottom: -150px; }
+    .circle2 { width: 200px; height: 200px; right: 10%; bottom: -200px; animation-duration: 14s; }
+    .circle3 { width: 90px; height: 90px; left: 40%; bottom: -130px; animation-duration: 12s; }
+
+    @keyframes floatUp {
+        0% { transform: translateY(0); opacity: 0.4; }
+        100% { transform: translateY(-800px); opacity: 0; }
+    }
+
+    /* ===== FEATURE CARDS ===== */
+    .feature-card {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        min-height: 250px;
+    }
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+    }
+    .feature-icon {
+        font-size: 45px;
+        color: #2a5298;
+        margin-bottom: 15px;
+    }
+
+    /* ===== INFO SECTION WITH LEFT IMAGE ===== */
+    .info-section {
+        background: #fff;
+        padding: 60px 20px;
+        border-radius: 15px;
+        margin-top: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .info-img {
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+</style>
+</head>
+
+<body>
+<header>
+      <!-- Fixed-top navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+        <div class="container-fluid">
+          <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="Logo" width="80" height="80" class="d-inline-block align-text-top">
+            <div class="ms-2">
+              <h5 class="mb-0 fs-2">Crime Reporting & Verification System</h5>
+            </div>
+          </a>
+          <div class="ms-auto d-flex align-items-center">
+            <a class="btn btn-danger me-3" href="emergency">EMERGENCY</a>
+            <a class="btn btn-primary me-3" href="login">LOGIN</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+<!-- HERO SECTION -->
+<section class="container hero-section position-relative text-center">
+    <div class="floating-circle circle1"></div>
+    <div class="floating-circle circle2"></div>
+    <div class="floating-circle circle3"></div>
+
+    <h1 class="fw-bold mb-3">Your Safety, Our Priority</h1>
+    <p class="lead">A modern platform enabling citizens to report crimes, submit evidence, and support faster verification for a safer community.</p>
+    <a href="login" class="btn btn-light btn-lg mt-3">Start Reporting</a>
+</section>
+
+<!-- FEATURE CARDS -->
+<section class="container mt-5">
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <div class="feature-icon">🔒</div>
+                <h4>Secure Crime Reporting</h4>
+                <p>Submit crime reports with complete data privacy. Your identity stays confidential unless legally required.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <div class="feature-icon">📝</div>
+                <h4>Evidence Submission</h4>
+                <p>Upload photos, videos, and documents to support investigations, ensuring faster case verification.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card text-center">
+                <div class="feature-icon">📊</div>
+                <h4>Track Case Progress</h4>
+                <p>Get real-time updates on your submitted reports and track verification status step by step.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- INFO SECTION -->
+<section class="container info-section mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='background/Crime Analysis Image.gif') }}" class="info-img" alt="Crime Analysis Image">
+        </div>
+        <div class="col-md-6 mt-4 mt-md-0">
+            <h3 class="fw-bold mb-3">Crime Reporting Statistics & Transparency</h3>
+            <p>According to the National Crime Records Bureau (NCRB), India records over <b>60 lakh (6 million)</b> crime cases every year. Nearly <b>50% of these cases</b> reach successful resolution through verification and legal trials.</p>
+            <p>With more citizen participation and accurate evidence submission, the resolution rate can improve significantly — helping build safer neighborhoods.</p>
+            <ul>
+                <li>✔ Increase transparency between citizens & authorities</li>
+                <li>✔ Eliminate false reporting through verification</li>
+                <li>✔ Strengthen community trust</li>
+                <li>✔ Accelerate investigation timelines</li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1055;">
+        {% for category, message in messages %}
+            <div class="toast show align-items-center border-0 animate__animated animate__bounceInDown" role="alert" aria-live="assertive" aria-atomic="true">
+                {% if category == 'error' %}
+                    <div class="toast-body text-bg-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Error:</strong> {{ message }}
+                    </div>
+                {% elif category == 'success' %}
+                    <div class="toast-body text-bg-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Success:</strong> {{ message }}
+                    </div>
+                {% elif category == 'warning' %}
+                    <div class="toast-body text-bg-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> {{ message }}
+                    </div>
+                {% else %}
+                    <div class="toast-body text-bg-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Info:</strong> {{ message }}
+                    </div>
+                {% endif %}
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+
+ <footer>
+            <div class="fixed-bottom text-center footer">
+                <p class="text-center text-black mb-0">© 2025 Crime Reporting & Verification System. All rights reserved.</p>
+            </div>
+        </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var toastElements = document.querySelectorAll('.toast');
+        toastElements.forEach(function (toastElement) {
+            var toast = new bootstrap.Toast(toastElement, { delay: 5000 }); // Delay of 5 seconds
+            toast.show();
+        });
+    });
+</script>
+
+</body>
+</html>

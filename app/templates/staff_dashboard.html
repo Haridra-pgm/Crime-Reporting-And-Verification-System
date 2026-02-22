@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crime Reporting & Verification System</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+
+  <body>
+    <header>
+      <!-- Fixed-top navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+        <div class="container-fluid">
+          <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="Logo" width="80" height="80" class="d-inline-block align-text-top">
+            <div class="ms-2">
+              <h5 class="mb-0 fs-2">Crime Reporting & Verification System</h5>
+            </div>
+          </a>
+          <div class="ms-auto d-flex align-items-center">
+            <a class="btn btn-primary me-3" href="myprofile">🥷 MY PROFILE</a>
+            <a class="btn btn-primary me-3" href="logout">LOG OUT</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main style="margin-top: 80px;">
+      <div class="container py-5">
+        <div class="row g-4">
+
+            
+            <div class="container py-3">
+            <p class="text-center fs-1 fw-bold">👮🏻‍♀️STAFF CORNER </p>
+        </div>
+
+          <!-- Card 1 -->
+          <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+              <img src="{{ url_for('static', filename='background/customercomplaintsjpg.jpg') }}" class="card-img-top" alt="Total Number of Complaints">
+              <div class="card-body text-center bg-primary text-white rounded-bottom">
+                <h5 class="card-title fw-bold">Total Number of Complaints</h5>
+                <div class="d-flex justify-content-center gap-2 mt-3">
+                  <a href="#" class="btn btn-light">Check</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+              <img src="{{ url_for('static', filename='background/update.png') }}" class="card-img-top" alt="Update Status of Complaints">
+              <div class="card-body text-center bg-info text-white rounded-bottom">
+                <h5 class="card-title fw-bold">Update Status of Complaints</h5>
+                <a href="#" class="btn btn-light mt-3">Update</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+              <img src="{{ url_for('static', filename='background/rules&regulation.jpg') }}" class="card-img-top" alt="RULES AND REGULATION">
+              <div class="card-body text-center bg-dark text-white rounded-bottom">
+                <h5 class="card-title fw-bold">RULES AND REGULATION</h5>
+                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#rulesModal">
+                  READ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rules Modal -->
+      <div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="rulesModalLabel">Rules & Regulations for Police Staff</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <h6>1️⃣ Complaint Management & Verification</h6>
+              <ul>
+                <li>Every complaint must be reviewed within 48 hours of registration.</li>
+                <li>Verify authenticity before marking any complaint as “Verified”.</li>
+                <li>Maintain an audit trail — record who verified and when.</li>
+                <li>Do not reject complaints without justification and documentation.</li>
+              </ul>
+
+              <h6>2️⃣ Data Privacy & Confidentiality</h6>
+              <ul>
+                <li>Protect complainant information at all times.</li>
+                <li>Do not disclose details to unauthorized persons or media.</li>
+                <li>Store complaint data securely and avoid saving on personal devices.</li>
+              </ul>
+
+              <h6>3️⃣ Ethical Conduct</h6>
+              <ul>
+                <li>Treat all complainants respectfully and without bias.</li>
+                <li>Do not misuse access or authority for personal gain.</li>
+                <li>Ensure integrity, transparency, and accountability in all actions.</li>
+              </ul>
+
+              <h6>4️⃣ Reporting & Documentation</h6>
+              <ul>
+                <li>Update complaint statuses promptly (Pending → Verified → Resolved).</li>
+                <li>Add remarks for every status update.</li>
+                <li>Submit weekly summaries to your supervising officer.</li>
+              </ul>
+
+              <h6>5️⃣ Cybersecurity & System Usage</h6>
+              <ul>
+                <li>Always log out after use, especially on shared systems.</li>
+                <li>Never share login credentials.</li>
+                <li>Report any system misuse or data breach immediately.</li>
+              </ul>
+
+              <h6>6️⃣ Cooperation & Accountability</h6>
+              <ul>
+                <li>Coordinate with other departments as required.</li>
+                <li>Respond promptly to citizen and admin queries.</li>
+                <li>Take accountability for all system actions and reports.</li>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="fixed-bottom text-center footer">
+        <p class="text-center text-black mb-0">© 2025 Crime Reporting & Verification System. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

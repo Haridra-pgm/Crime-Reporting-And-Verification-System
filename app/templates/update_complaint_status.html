@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Complaint Status - Staff Portal</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin-top: 100px;
+            margin-bottom: 80px;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+        }
+        
+        .back-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 0;
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .complaint-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+        
+        .complaint-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .complaint-card .complaint-id {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        .complaint-card .complaint-name {
+            font-weight: 600;
+            color: #333;
+            margin: 5px 0;
+        }
+        
+        .complaint-card .complaint-meta {
+            font-size: 13px;
+            color: #999;
+            margin-top: 10px;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-verified {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-resolved {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-progress {
+            background: #e7d4f5;
+            color: #721c24;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            float: right;
+            margin-top: 10px;
+        }
+        
+        .action-btn:hover {
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+        }
+        
+        .filter-btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a href="{{ url_for('staff_dashboard') }}" class="btn back-btn">
+                <i class="fas fa-arrow-left"></i> BACK
+            </a>
+            <div class="ms-auto">
+                <span style="color: white; font-weight: 600;">{{ staff_name }}</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container-fluid">
+            <h1><i class="fas fa-tasks"></i> Update Complaint Status</h1>
+            <p>Manage and update the status of complaints</p>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by complainant name or crime type..." style="border-radius: 8px;">
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="mb-3">
+            <button class="btn btn-outline-secondary filter-btn" onclick="filterComplaints('all')">All</button>
+            <button class="btn btn-outline-warning filter-btn" onclick="filterComplaints('Pending')">Pending</button>
+            <button class="btn btn-outline-info filter-btn" onclick="filterComplaints('Progress')">In Progress</button>
+            <button class="btn btn-outline-success filter-btn" onclick="filterComplaints('Verified')">Verified</button>
+            <button class="btn btn-outline-primary filter-btn" onclick="filterComplaints('Resolved')">Resolved</button>
+        </div>
+        
+        <!-- Complaints List -->
+        {% if complaints %}
+            <div id="complaintsList">
+                {% for complaint in complaints %}
+                    <div class="complaint-card" data-status="{{ complaint[6] }}">
+                        <div>
+                            <span class="complaint-id">#{{ complaint[0] }} - {{ complaint[4] }}</span>
+                            <div class="complaint-name"><i class="fas fa-user"></i> {{ complaint[1] }}</div>
+                            <div class="complaint-meta">
+                                <i class="fas fa-calendar"></i> {{ complaint[2] }} | 
+                                <i class="fas fa-map-marker-alt"></i> {{ complaint[3] }}
+                            </div>
+                            {% if complaint[6] == 'Pending' %}
+                                <span class="status-badge status-pending"><i class="fas fa-clock"></i> Pending</span>
+                            {% elif complaint[6] == 'Verified' %}
+                                <span class="status-badge status-verified"><i class="fas fa-check"></i> Verified</span>
+                            {% elif complaint[6] == 'Resolved' %}
+                                <span class="status-badge status-resolved"><i class="fas fa-check-double"></i> Resolved</span>
+                            {% elif complaint[6] == 'Progress' %}
+                                <span class="status-badge status-progress"><i class="fas fa-spinner"></i> In Progress</span>
+                            {% endif %}
+                            <a href="{{ url_for('update_complaint', complaint_id=complaint[0]) }}" class="action-btn">
+                                <i class="fas fa-edit"></i> Update
+                            </a>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h4>No Complaints Found</h4>
+                <p>There are currently no complaints to update.</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p><i class="fas fa-shield-alt"></i> © 2025 Crime Reporting & Verification System. All rights reserved.</p>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.complaint-card');
+            
+            for (let card of cards) {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            }
+        });
+        
+        // Filter functionality
+        function filterComplaints(status) {
+            const cards = document.querySelectorAll('.complaint-card');
+            
+            for (let card of cards) {
+                if (status === 'all') {
+                    card.style.display = '';
+                } else {
+                    const cardStatus = card.getAttribute('data-status');
+                    card.style.display = cardStatus === status ? '' : 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

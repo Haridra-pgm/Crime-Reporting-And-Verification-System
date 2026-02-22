@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Crime Reporting & Verification System</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+<style>
+/* Ensure no margin or padding in body, html, or main */
+
+main {
+    
+    background-image: url('/static/background/background_image.jpg');
+    background-size: cover; /* Ensure the image covers the entire section */
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 120vh; /* Full height of the viewport */
+    width: 100%; /* Full width */
+}
+
+.card-body {
+    background:rgb(94, 222, 248); /* Light translucent background for readability */
+    padding: 20px;
+}
+.register:disabled {
+    background-color: grey;
+    border-color: grey;
+    cursor: not-allowed;
+}
+.register:hover{
+    background-color: navy;
+    border-color: navy;
+    color: rgb(0, 0, 0);
+
+
+}
+</style>
+    <body>
+        <header>
+            <!-- Fixed-top navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand d-flex align-items-center" href="#">
+                        <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="Logo" width="80" height="80" class="d-inline-block align-text-top">
+                        <div class="ms-2">
+                            <h5 class="mb-0 fs-2">Crime Reporting & Verification System</h5>
+                        </div>
+                    </a>
+                    <div class="ms-auto d-flex align-items-center">
+                        <a class="btn btn-danger me-3" href="emergencyLogin">EMERGENCY</a>
+                        <a class="btn btn-primary me-3" href="home">HOME</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main class="d-flex justify-content-center align-items-center" style="margin-top: 110px; margin-bottom: 10px;">
+        <div class="card text-center" style="margin-top: 50px; height: auto; width:16cm">
+        <div class="card-header gradient-header">
+            Register
+        </div>
+        <div class="card-body">
+            <form action="registerUser" method="post">
+                <div class="row row-cols-2">
+                    <div class="mb-3"> 
+                        <label class="form-label">Fullname</label>
+                        <input type="text" name="fullname" id="fullname" class="form-control" required placeholder="Enter Fullname">
+                        <span class="text-danger fst-italic" id="fullnameError"></samp>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email-id</label>
+                        <input type="email" name="email" id="email" class="form-control" style="width:fit-content" required placeholder="Enter Email-id">
+                        <span class="text-danger fst-italic" id="emailError"></samp>
+                    </div>
+                </div>
+                <div class="row row-cols-2">
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" name="phonenumber" id="phonenumber" class="form-control" required placeholder="Enter Phone_Number">
+                        <span class="text-danger fst-italic" id="phoneError"></samp>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date of birth</label>
+                        <input type="date" name="dob" id="dob" class="form-control" required placeholder="Enter DOB">
+                        <span class="text-danger fst-italic" id="dobError"></samp>
+                    </div>
+                </div>    
+                <div class="mb-3">
+                     <label class="form-label">Gender</label>
+                    <select class="form-select" name="gender" id="gender">
+                        <option value="" selected disabled>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Others</option>    
+                    </select>
+                     <span class="text-danger fst-italic" id="Error"></samp>
+                </div>
+                <div class="row row-cols-2">
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="password" id="newpassword" class="form-control" required placeholder="Enter New Password">
+                        <span class="text-danger fst-italic" id="newpasswordError"></samp>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="confirmPassword" id="confrimpassword" class="form-control" required placeholder="Enter Confrim Password">
+                        <span class="text-danger fst-italic" id="confrimpasswordError"></samp>
+                    </div>
+                </div>
+                <button type="submit" class="btn register" id="registerButton" disabled>Register</button>
+            </form>
+        </div>
+    </div>
+        </main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1055;">
+        {% for category, message in messages %}
+            <div class="toast show align-items-center border-0 animate__animated animate__bounceInDown" role="alert" aria-live="assertive" aria-atomic="true">
+                {% if category == 'error' %}
+                    <div class="toast-body text-bg-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Error:</strong> {{ message }}
+                    </div>
+                {% elif category == 'success' %}
+                    <div class="toast-body text-bg-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Success:</strong> {{ message }}
+                    </div>
+                {% elif category == 'warning' %}
+                    <div class="toast-body text-bg-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> {{ message }}
+                    </div>
+                {% else %}
+                    <div class="toast-body text-bg-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Info:</strong> {{ message }}
+                    </div>
+                {% endif %}
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+
+        <footer>
+            <div class="fixed-bottom text-center footer">
+                <p class="text-center text-black mb-0">© 2025 Crime Reporting & Verification System. All rights reserved.</p>
+            </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="{{url_for('static', filename='js/script.js')}}"></script>
+        <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const fullname = document.getElementById("fullname");
+    const email = document.getElementById("email");
+    const phonenumber = document.getElementById("phonenumber");
+    const dob = document.getElementById("dob");
+    const gender = document.getElementById("gender");
+    const newpassword = document.getElementById("newpassword");
+    const confirmPassword = document.getElementById("confrimpassword");
+    const registerButton = document.getElementById("registerButton");
+
+    const fullnameError = document.getElementById("fullnameError");
+    const emailError = document.getElementById("emailError");
+    const phoneError = document.getElementById("phoneError");
+    const dobError = document.getElementById("dobError");
+    const genderError = document.getElementById("Error");
+    const newpasswordError = document.getElementById("newpasswordError");
+    const confirmPasswordError = document.getElementById("confrimpasswordError");
+
+    function validateFullname() {
+    const nameRegex = /^[A-Za-z\s]{3,}$/;
+    if (!nameRegex.test(fullname.value.trim())) {
+        fullnameError.textContent = "Enter a valid name (min 3 letters).";
+        return false;
+    }
+    fullnameError.textContent = "";
+    return true;
+    }
+
+    function validateEmail() {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value.trim())) {
+        emailError.textContent = "Enter a valid email address.";
+        return false;
+    }
+    emailError.textContent = "";
+    return true;
+    }
+
+    function validatePhone() {
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phonenumber.value.trim())) {
+        phoneError.textContent = "Enter a valid 10-digit phone number.";
+        return false;
+    }
+    phoneError.textContent = "";
+    return true;
+    }
+
+    function validateDOB() {
+    if (!dob.value) {
+        dobError.textContent = "Please select your date of birth.";
+        return false;
+    }
+    const today = new Date();
+    const birthDate = new Date(dob.value);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    if (age < 13) {
+        dobError.textContent = "You must be at least 13 years old.";
+        return false;
+    }
+    dobError.textContent = "";
+    return true;
+    }
+
+    function validateGender() {
+    if (!gender.value) {
+        genderError.textContent = "Please select your gender.";
+        return false;
+    }
+    genderError.textContent = "";
+    return true;
+    }
+
+    function validatePassword() {
+    const passRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    if (!passRegex.test(newpassword.value)) {
+      newpasswordError.textContent =
+        "Password must be 8+ chars, include uppercase, number, and special char.";
+      return false;
+    }
+    newpasswordError.textContent = "";
+    return true;
+  }
+
+  function validateConfirmPassword() {
+    if (confirmPassword.value !== newpassword.value) {
+      confirmPasswordError.textContent = "Passwords do not match.";
+      return false;
+    }
+    confirmPasswordError.textContent = "";
+    return true;
+  }
+
+  function validateForm() {
+    const valid =
+      validateFullname() &&
+      validateEmail() &&
+      validatePhone() &&
+      validateDOB() &&
+      validateGender() &&
+      validatePassword() &&
+      validateConfirmPassword();
+
+    registerButton.disabled = !valid;
+  }
+
+  // Add event listeners for live validation
+  fullname.addEventListener("input", validateForm);
+  email.addEventListener("input", validateForm);
+  phonenumber.addEventListener("input", validateForm);
+  dob.addEventListener("change", validateForm);
+  gender.addEventListener("change", validateForm);
+  newpassword.addEventListener("input", validateForm);
+  confirmPassword.addEventListener("input", validateForm);
+});
+</script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var toastElements = document.querySelectorAll('.toast');
+        toastElements.forEach(function (toastElement) {
+            var toast = new bootstrap.Toast(toastElement, { delay: 5000 }); // Delay of 5 seconds
+            toast.show();
+        });
+    });
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crime Reporting & Verification System</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+      body {
+        background-color: #f8f9fa;
+        padding-top: 110px; /* space for fixed navbar */
+      }
+
+      .card {
+        border-radius: 15px;
+        padding: 30px;
+      }
+
+      .btn-report {
+        width: 200px;
+        font-weight: 600;
+        border-radius: 8px;
+      }
+
+      .form-label {
+        font-weight: 600;
+      }
+
+      .modal-content {
+        border-radius: 15px;
+        padding: 20px;
+      }
+
+      .footer {
+        background-color: #f8f9fa;
+        padding: 8px 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ✅ HEADER (Updated Navbar) -->
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+        <div class="container-fluid">
+          <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="Logo" width="80" height="80" class="d-inline-block align-text-top">
+            <div class="ms-2">
+              <h5 class="mb-0 fs-2">Crime Reporting & Verification System</h5>
+            </div>
+            <div class="ms-auto d-flex align-items-center">
+            <a href="login" class="btn btn-primary me-3">LOGIN</a>
+            <a class="btn btn-primary me-3" href="home">HOME</a>
+          </div>
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- 🚨 Emergency Report Section -->
+    <main class="container my-5">
+      <section class="card shadow-lg">
+        <h3 class="text-center text-danger mb-4"><u>🚨 Emergency Reporting</u></h3>
+        <p class="fw-bold text-muted text-center">
+          If you are witnessing or facing an emergency — report immediately below.
+          Authorities will be notified with your live location.
+        </p>
+
+        <div class="text-center mb-4">
+          <button class="btn btn-danger btn-report" data-bs-toggle="modal" data-bs-target="#emergencyModal">
+            Report Emergency
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- 🧾 Emergency Modal -->
+    <div class="modal fade" id="emergencyModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow-lg">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title fw-bold">🚨 Emergency Report Form</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="emergencyForm" action="/submitEmergency" method="post" enctype="multipart/form-data" onchange="emergencyFormValidation()">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Your Name *</label>
+                  <input type="text" class="form-control" placeholder="Enter your name" required name="name" id="name">
+                  <samp class="text-danger fst-italic" id="nameError"></samp>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Contact Number *</label>
+                  <input type="tel" class="form-control" maxlength="10" placeholder="Enter mobile number" required pattern="^\d{10}$" name="contact" id="contact">
+                  <samp class="text-danger fst-italic" id="contactError"></samp>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Email ID *</label>
+                  <input type="email" class="form-control" placeholder="Enter your email" required name="email" id="email">
+                  <samp class="text-danger fst-italic" id="emailError"></samp>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Type of Emergency *</label>
+                  <select id="emergencyType" class="form-select" required name="emergencyType" id="emergencyType">
+                    <option value="">-- Select Type --</option>
+                    <option value="RoadAccident">🚗 Road Accident</option>
+                    <option value="Fire/Explosion">🔥 Fire / Explosion</option>
+                    <option value="MedicalEmergency">🚑 Medical Emergency</option>
+                    <option value="PhysicalAssault/Violence">⚠️ Physical Assault / Violence</option>
+                    <option value="Theft/Robbery">💰 Theft / Robbery</option>
+                    <option value="Other">❗ Other</option>
+                  </select>
+                  <samp class="text-danger fst-italic" id="emergencyTypeError"></samp>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Location (Auto-Detected or Manual)</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="userLocation" placeholder="Fetching location..." readonly required name="location" id="location">
+                    <samp class="text-danger fst-italic" id="locationError"></samp>
+                    <button type="button" class="btn btn-outline-secondary" id="enableLocationEdit">Edit</button>
+                  </div>
+                </div>
+              <div class="col-md-6">
+                <label class="form-label">Crime Date and Time</label>
+                <input type="datetime-local" class="form-control" id="datetime" name="datetime" required>
+                <samp class="text-danger fst-italic" id="datetimeError"></samp>
+              </div>  
+                <div class="col-md-12">
+                  <label class="form-label">Brief Description *</label>
+                  <textarea class="form-control" rows="3" placeholder="Describe the situation briefly..." required name="description" id="description"></textarea>
+                  <samp class="text-danger fst-italic" id="descriptionError"></samp>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Upload Photo / Video (max 10MB)</label>
+                  <input type="file" class="form-control" accept=".jpg,.jpeg,.png,.mp4,.mov" name="media" id="media">
+                  <samp class="text-danger fst-italic" id="mediaError"></samp>
+                </div>
+              </div>
+
+              <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success px-5" id="submitEmergencyBtn" disabled>Submit Emergency</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1055;">
+        {% for category, message in messages %}
+            <div class="toast show align-items-center border-0 animate__animated animate__bounceInDown" role="alert" aria-live="assertive" aria-atomic="true">
+                {% if category == 'error' %}
+                    <div class="toast-body text-bg-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Error:</strong> {{ message }}
+                    </div>
+                {% elif category == 'success' %}
+                    <div class="toast-body text-bg-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Success:</strong> {{ message }}
+                    </div>
+                {% elif category == 'warning' %}
+                    <div class="toast-body text-bg-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> {{ message }}
+                    </div>
+                {% else %}
+                    <div class="toast-body text-bg-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Info:</strong> {{ message }}
+                    </div>
+                {% endif %}
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+
+    <!-- ✅ FOOTER (Updated) -->
+    <footer>
+      <div class="fixed-bottom text-center footer">
+        <p class="text-center text-black mb-0">© 2025 Crime Reporting & Verification System. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // Geolocation Script
+      document.addEventListener("DOMContentLoaded", function() {
+        const locationInput = document.getElementById("userLocation");
+        const enableEditBtn = document.getElementById("enableLocationEdit");
+
+        function fetchLocation() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                locationInput.value = `Lat: ${lat.toFixed(5)}, Lon: ${lon.toFixed(5)}`;
+              },
+              function(error) {
+                locationInput.value = "Unable to retrieve location.";
+              }
+            );
+          } else {
+            locationInput.value = "Geolocation is not supported by this browser.";
+          }
+        }
+
+        fetchLocation();
+
+        enableEditBtn.addEventListener("click", function() {
+          locationInput.removeAttribute("readonly");
+          locationInput.focus();
+        });
+      });
+    </script>
+        <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var toastElements = document.querySelectorAll('.toast');
+        toastElements.forEach(function (toastElement) {
+            var toast = new bootstrap.Toast(toastElement, { delay: 5000 }); // Delay of 5 seconds
+            toast.show();
+        });
+    });
+</script>
+
+    <script>
+      function emergencyFormValidation() {
+        const name = document.getElementById("name").value.trim();
+        const contact = document.getElementById("contact").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const emergencyType = document.getElementById("emergencyType").value;
+        const description = document.getElementById("description").value.trim();
+        const mediaInput = document.getElementById("media");
+        const locationInput = document.getElementById("userLocation").value.trim();
+        const datetime = document.getElementById("datetime").value.trim();
+
+        let nameValid=false;
+        let contactValid=false;
+        let emailValid=false;
+        let emergencyTypeValid=false;
+        let descriptionValid=false;
+        let mediaValid=false;
+        let locationValid=false;
+        let datetimeValid=false;
+
+        if (name === "") {
+          document.getElementById("nameError").textContent = "Name is required."; 
+          nameValid=false;
+        }
+        else if (!/^[a-zA-Z\s]+$/.test(name)) {
+          document.getElementById("nameError").textContent = "Name can only contain letters and spaces.";
+          nameValid=false;
+        } 
+        else {
+          document.getElementById("nameError").textContent = "";
+          nameValid=true;
+        }
+
+        if (!/^\d{10}$/.test(contact)) {
+          document.getElementById("contactError").textContent = "Enter a valid 10-digit contact number.";
+          contactValid = false;
+        } else {
+
+          document.getElementById("contactError").textContent = "";
+          contactValid = true;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById("emailError").textContent = "Enter a valid email address.";
+          emailValid = false;
+        } 
+        else if (email === "") {
+          document.getElementById("emailError").textContent = "Email is required.";
+          emailValid = false;
+        }  
+        else {
+          document.getElementById("emailError").textContent = "";
+          emailValid = true;
+        }
+        
+        if (emergencyType === "") {
+          document.getElementById("emergencyTypeError").textContent = "Please select an emergency type.";
+          emergencyTypeValid = false;
+        } else {
+          document.getElementById("emergencyTypeError").textContent = "";
+          emergencyTypeValid = true;
+        }
+
+        if (description === "") {
+          document.getElementById("descriptionError").textContent = "Description is required.";
+          descriptionValid = false;
+        } else {
+          document.getElementById("descriptionError").textContent = "";
+          descriptionValid = true;
+        }
+
+        if (mediaInput.files.length > 0) {
+          const file = mediaInput.files[0];
+          const validTypes = ['image/jpeg', 'image/png', 'video/mp4', 'video/quicktime'];
+          if (!validTypes.includes(file.type)) {
+            document.getElementById("mediaError").textContent = "Invalid file type. Only JPG, PNG, MP4, MOV allowed.";
+            mediaValid = false;
+          } else if (file.size > 10 * 1024 * 1024) {
+            document.getElementById("mediaError").textContent = "File size exceeds 10MB limit.";
+            mediaValid = false;
+          } else {
+            document.getElementById("mediaError").textContent = "";
+            mediaValid = true;
+          }
+        } 
+        else {
+          document.getElementById("mediaError").textContent = "";
+          mediaValid = true;
+        }
+
+        if (locationInput === "") {
+          document.getElementById("locationError").textContent = "Location is required.";
+          locationValid = false;
+        } else {
+          document.getElementById("locationError").textContent = "";
+          locationValid = true;
+        }
+
+        if (datetime === "") {
+          document.getElementById("datetimeError").textContent = "Date and Time is required.";
+          datetimeValid = false;
+        }
+        else if(new Date(datetime) > new Date()) {
+          valid = false;
+          document.getElementById('datetimeError').innerText = 'Crime date cannot be in the future.';
+        }  
+        else {
+          document.getElementById("datetimeError").textContent = "";
+          datetimeValid = true;
+        }
+
+        console.log(nameValid);
+        console.log(contactValid);
+        console.log(emailValid);
+        console.log(emergencyTypeValid);
+        console.log(descriptionValid);
+        console.log(mediaValid);
+        console.log(locationValid);
+        console.log(datetimeValid);
+        const isValid = nameValid && contactValid && emailValid && emergencyTypeValid && descriptionValid && mediaValid && locationValid && datetimeValid;
+        console.log("isValid:- ",isValid);
+        if (isValid) {
+          document.getElementById("submitEmergencyBtn").disabled = false;
+        } else {
+          document.getElementById("submitEmergencyBtn").disabled = true;
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Emergency Complaint - Staff Portal</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin-top: 100px;
+            margin-bottom: 80px;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+        }
+        
+        .back-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+            color: white;
+            padding: 30px 0;
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-header h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .alert-warning-custom {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .urgency-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .urgency-option:hover {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+        
+        .urgency-option input {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .urgency-option.critical {
+            border-color: #ff4757;
+            background: #ffe8e8;
+        }
+        
+        .urgency-option.high {
+            border-color: #ff6b6b;
+            background: #fff0f0;
+        }
+        
+        .urgency-option.medium {
+            border-color: #ffa502;
+            background: #fff8f0;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            color: white;
+        }
+        
+        .reset-btn {
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        
+        .reset-btn:hover {
+            background: #d0d0d0;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #1565c0;
+        }
+        
+        .info-box i {
+            margin-right: 8px;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a href="{{ url_for('staff_dashboard') }}" class="btn back-btn">
+                <i class="fas fa-arrow-left"></i> BACK
+            </a>
+            <div class="ms-auto">
+                <span style="color: white; font-weight: 600;">{{ staff_name }}</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container-fluid">
+            <h1><i class="fas fa-siren"></i> Emergency Complaint Report</h1>
+            <p>Report urgent and critical incidents requiring immediate action</p>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container py-4">
+        
+        <!-- Alert -->
+        <div class="alert-warning-custom">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Important:</strong> Emergency complaints are prioritized and will be addressed immediately. Provide complete and accurate information.
+        </div>
+        
+        <!-- Form Container -->
+        <div class="form-container">
+            <form method="POST" action="{{ url_for('emergency_complaint') }}" novalidate>
+                
+                <!-- Info Box -->
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Emergency Protocol:</strong> All emergency complaints are logged and escalated to senior officers within 15 minutes. Attach supporting documents if available.
+                </div>
+                
+                <!-- Crime Type -->
+                <div class="form-group">
+                    <label for="crime_type">
+                        <i class="fas fa-shield-alt"></i> Type of Crime / Incident
+                    </label>
+                    <select id="crime_type" name="crime_type" required>
+                        <option value="">-- Select Crime Type --</option>
+                        <option value="Robbery">Robbery / Theft</option>
+                        <option value="Assault">Assault / Violence</option>
+                        <option value="Cybercrime">Cybercrime</option>
+                        <option value="Fraud">Fraud / Scam</option>
+                        <option value="Drug">Drug Related</option>
+                        <option value="Human Trafficking">Human Trafficking</option>
+                        <option value="Accident">Accident / Emergency</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <!-- Location -->
+                <div class="form-group">
+                    <label for="location">
+                        <i class="fas fa-map-marker-alt"></i> Location of Incident
+                    </label>
+                    <input 
+                        type="text" 
+                        id="location" 
+                        name="location" 
+                        placeholder="Full address, landmark, or coordinates"
+                        required
+                    >
+                </div>
+                
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description">
+                        <i class="fas fa-file-alt"></i> Detailed Description
+                    </label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        placeholder="Provide complete details of the incident (What happened, who is involved, any injuries, property damage, etc.)"
+                        required
+                    ></textarea>
+                </div>
+                
+                <!-- Urgency Level -->
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-exclamation-circle"></i> Urgency Level
+                    </label>
+                    
+                    <div class="urgency-option critical">
+                        <input type="radio" id="urgency-critical" name="urgency" value="Critical" required>
+                        <label for="urgency-critical" style="margin-bottom: 0; cursor: pointer;">
+                            <strong style="color: #ff4757;">CRITICAL</strong> - Life threatening, immediate danger
+                        </label>
+                    </div>
+                    
+                    <div class="urgency-option high">
+                        <input type="radio" id="urgency-high" name="urgency" value="High" required>
+                        <label for="urgency-high" style="margin-bottom: 0; cursor: pointer;">
+                            <strong style="color: #ff6b6b;">HIGH</strong> - Serious incident, requires urgent response
+                        </label>
+                    </div>
+                    
+                    <div class="urgency-option medium">
+                        <input type="radio" id="urgency-medium" name="urgency" value="Medium" required>
+                        <label for="urgency-medium" style="margin-bottom: 0; cursor: pointer;">
+                            <strong style="color: #ffa502;">MEDIUM</strong> - Important but not immediately life-threatening
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="d-flex gap-2">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> SUBMIT EMERGENCY REPORT
+                    </button>
+                    <button type="reset" class="reset-btn">
+                        <i class="fas fa-redo"></i> CLEAR FORM
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+        
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p><i class="fas fa-shield-alt"></i> © 2025 Crime Reporting & Verification System. All rights reserved.</p>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const crimeType = document.getElementById('crime_type').value;
+            const location = document.getElementById('location').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const urgency = document.querySelector('input[name="urgency"]:checked');
+            
+            if (!crimeType || !location || !description || !urgency) {
+                e.preventDefault();
+                alert('Please fill in all required fields');
+            }
+        });
+    </script>
+</body>
+</html>

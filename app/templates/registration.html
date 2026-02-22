@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crime Reporting & Verification System</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+
+      .card {
+        border-radius: 15px;
+        padding: 30px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #acceptBtn {
+        width: 200px;
+        font-weight: 600;
+        border-radius: 8px;
+      }
+
+      #acceptBtn:disabled {
+        background-color: #c0c0c0;
+        border: none;
+      }
+
+      .modal-content {
+        border-radius: 15px;
+        padding: 20px;
+      }
+
+      .form-label {
+        font-weight: 600;
+      }
+
+      .form-section {
+        margin-top: 25px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="text-center mt-4">
+      <h1 class="fw-bold text-primary">Crime Reporting & Verification System</h1>
+    </header>
+
+    <main class="container my-5">
+      <!-- ✅ CHECKLIST SECTION -->
+      <section class="card shadow-lg">
+        <h3 class="text-center text-success mb-4">
+          <u>✅ CHECKLIST FOR COMPLAINANT</u>
+        </h3>
+
+        <p class="text-danger fw-bold">
+          Please keep this information ready before filing your complaint:
+        </p>
+
+        <h5 class="text-danger mt-3">🔴 Mandatory Information (Common for All Crimes)</h5>
+        <ul>
+          <li>Incident Date and Time.</li>
+          <li>Detailed description of the incident (minimum 200 characters, avoid special symbols like #, $, ^, *).</li>
+          <li>Soft copy of valid ID proof (Aadhaar, PAN, Passport, Driving License, or Voter ID) – JPG/JPEG/PNG, max 5 MB.</li>
+          <li>Location / Place of Incident.</li>
+          <li>Complainant’s Details – Full Name, Gender, Address, Mobile Number, and Email ID.</li>
+          <li>Type of Crime / Category.</li>
+          <li>Declaration confirming the authenticity of the provided information.</li>
+        </ul>
+
+        <h5 class="text-primary mt-4">💰 In Case of Financial / Online Transaction Fraud</h5>
+        <ul>
+          <li>Name of the Bank / Wallet / Merchant involved.</li>
+          <li>12-digit Transaction ID / UTR Number.</li>
+          <li>Date and Time of Transaction.</li>
+          <li>Fraud Amount (₹).</li>
+          <li>Screenshots or bank statements showing transaction (max 10 MB).</li>
+        </ul>
+
+        <h5 class="text-primary mt-4">🌐 In Case of Cyber / Social Media Crime</h5>
+        <ul>
+          <li>URL / Social Media Handle / Profile Link of suspect.</li>
+          <li>Screenshots of offensive or fraudulent content.</li>
+          <li>Date and Time of occurrence or post.</li>
+          <li>Any available contact details of the suspect (email / phone).</li>
+        </ul>
+
+        <h5 class="text-primary mt-4">👩‍🦰 In Case of Women / Children Related Crime</h5>
+        <ul>
+          <li>Age of Victim.</li>
+          <li>Relationship with Complainant (if not self).</li>
+          <li>Nature of Incident – Harassment, Abuse, Exploitation, etc.</li>
+          <li>Details of accused (if known).</li>
+        </ul>
+
+        <h5 class="text-primary mt-4">🚓 In Case of Theft / Physical Crime / Assault</h5>
+        <ul>
+          <li>Exact Location of Incident (with landmark).</li>
+          <li>Type of Crime (Theft, Robbery, Assault, etc.).</li>
+          <li>Details of stolen items or property.</li>
+          <li>Suspect description – clothing, vehicle, gender, etc.</li>
+        </ul>
+
+        <div class="alert alert-info mt-4">
+          <strong>📢 Note:</strong> Complaints with sufficient details are processed faster. Providing false information may lead to legal consequences.
+        </div>
+
+        <div class="text-center mt-4">
+          <div class="form-check d-inline-flex justify-content-center mb-3">
+            <input class="form-check-input me-2" type="checkbox" id="agreeCheckbox">
+            <label class="form-check-label" for="agreeCheckbox">
+              I have read and understood all the above information.
+            </label>
+          </div><br>
+          <button id="acceptBtn" class="btn btn-primary" disabled data-bs-toggle="modal" data-bs-target="#formModal">
+            Accept & Continue
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- 🧾 MODAL FORM -->
+    <div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow-lg">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title fw-bold">Complaint Registration Form</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+            <form action="crimeFormRegister" enctype="multipart/form-data" method="post" onchange="registrationValidation()">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Full Name * </label>
+                  <input type="text" class="form-control" required value="{{fullname}}" readonly name="fullname">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Email ID * </label>
+                  <input type="email" class="form-control" required value="{{emailid}}" readonly name="emailid">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Mobile Number *</label>
+                  <input type="tel" maxlength="10" class="form-control" required value="{{phoneNo}}" readonly name="phoneNo">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Aadhaar Number *</label>
+                  <input type="text" maxlength="12" class="form-control" required id="aadhaarNo" name="aadhaarNo">
+                  <span class="text-danger fst-italic" id="aadhaarNoError"></span>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Address *</label>
+                  <textarea class="form-control" rows="2" required name="Address" id="Address"></textarea>
+                  <span class="text-danger fst-italic" id="AddressError"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label required">Date & Time of Crime</label>
+                  <input type="datetime-local" class="form-control" id="crimeDate" required name="crimeDate">
+                  <span class="text-danger fst-italic" id="crimeDateError"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Location of Crime *</label>
+                  <input type="text" class="form-control" required name="LOC" id="LOC">
+                  <span class="text-danger fst-italic" id="LOCError"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Type of Crime *</label>
+                  <select id="crimeType" class="form-select" required name="crimeType" id="crimeType" >
+                    <option value="" selected disabled>-- Select Crime Type --</option>
+                    <option value="financial">Financial / Online Fraud</option>
+                    <option value="cyber">Cyber / Social Media Crime</option>
+                    <option value="women">Women / Children Related</option>
+                    <option value="theft">Theft / Physical Assault</option>
+                  </select>
+                  <span class="text-danger fst-italic" id="crimeTypeError"></span>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Detailed Description *</label>
+                  <textarea class="form-control" rows="4" minlength="10" required id="detailedDescription" name="detailedDescription"></textarea>
+                  <span class="text-danger fst-italic" id="descriptionError"></span>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Upload ID Proof (JPG/JPEG/PNG, max 5MB) *</label>
+                  <input type="file" accept=".jpg,.jpeg,.png" class="form-control" required name="idProof" id="idProof">
+                  <span class="text-danger fst-italic" id="idProofError"></span>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Upload Evidence (Photos/Videos, max 10MB) *</label>
+                  <input type="file" accept=".jpg,.jpeg,.png,.mp4,.mov" class="form-control" required name="evidence" id="evidence">
+                  <span class="text-danger fst-italic" id="evidenceError"></span>
+                </div>
+              </div>
+
+              <!-- Dynamic sections -->
+              <div id="financialSection" class="form-section hidden">
+                <h5 class="text-primary">💰 Financial / Online Fraud</h5>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Bank / Wallet / Merchant Name" id="bankName" name="bankName">
+                    <samp class="text-danger fst-italic" id="bankNameError"></samp>
+                  </div>
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Transaction ID / UTR Number" id="transactionId" name="transactionId">
+                    <samp class="text-danger fst-italic" id="transactionIdError"></samp>
+                  </div>
+
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Fraud Amount (₹)" type="number" id="fraudAmount" name="fraudAmount">  
+                    <samp class="text-danger fst-italic" id="fraudAmountError"></samp>
+                  </div>
+                </div>
+              </div>
+
+              <div id="cyberSection" class="form-section hidden">
+                <h5 class="text-primary">🌐 Cyber / Social Media Crime</h5>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Profile / URL of Suspect" id="suspectProfile" name="suspectProfile">
+                    <samp class="text-danger fst-italic" id="suspectProfileError"></samp>
+                  </div>
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Suspect Contact (if known)" id="suspectContact" name="suspectContact">
+                    <samp class="text-danger fst-italic" id="suspectContactError"></samp>
+                  </div>
+                </div>
+              </div>
+
+              <div id="womenSection" class="form-section hidden">
+                <h5 class="text-primary">👩‍🦰 Women / Children Related</h5>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <input class="form-control" placeholder="Age of Victim" type="number" id="victimAge" name="victimAge">
+                    <samp class="text-danger fst-italic" id="victimAgeError"></samp>
+                  </div>
+                  <div class="col-md-4">
+                    <input class="form-control" placeholder="Relationship with Complainant" id="relationship" name="relationship">
+                    <samp class="text-danger fst-italic" id="relationshipError"></samp>
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-select" id="incidentType" name="incidentType">
+                      <option value="" selected disabled> select an option</option>
+                      <option>Harassment</option>
+                      <option>Abuse</option>
+                      <option>Exploitation</option>
+                      <option>Other</option>
+                    </select>
+                    <samp class="text-danger fst-italic" id="incidentTypeError"></samp>
+                  </div>
+                </div>
+              </div>
+
+              <div id="theftSection" class="form-section hidden">
+                <h5 class="text-primary">🚓 Theft / Physical Assault</h5>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <select class="form-select" id="theftType" name="theftType">
+                      <option value="" selected disabled> select an option</option>
+                      <option>Theft</option>
+                      <option>Robbery</option>
+                      <option>Assault</option>
+                    </select>
+                    <samp class="text-danger fst-italic" id="theftTypeError"></samp>
+                  </div>
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Suspect Description (clothing, vehicle, etc.)" id="suspectDescription" name="suspectDescription">
+                    <samp class="text-danger fst-italic" id="suspectDescriptionError"></samp>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-check mt-4">
+                <input class="form-check-input" type="checkbox" required id="declarationCheckbox">
+                <label class="form-check-label">
+                  I hereby declare the information is true and accurate.
+                </label>
+                <samp class="text-danger fst-italic" id="declarationError"></samp>
+              </div>
+
+              <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success px-4" id="submitBtn" disabled>Submit Complaint</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1055;">
+        {% for category, message in messages %}
+            <div class="toast show align-items-center border-0 animate__animated animate__bounceInDown" role="alert" aria-live="assertive" aria-atomic="true">
+                {% if category == 'error' %}
+                    <div class="toast-body text-bg-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Error:</strong> {{ message }}
+                    </div>
+                {% elif category == 'success' %}
+                    <div class="toast-body text-bg-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Success:</strong> {{ message }}
+                    </div>
+                {% elif category == 'warning' %}
+                    <div class="toast-body text-bg-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> {{ message }}
+                    </div>
+                {% else %}
+                    <div class="toast-body text-bg-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Info:</strong> {{ message }}
+                    </div>
+                {% endif %}
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+
+    <footer class="text-center mt-5 text-muted">
+      © 2025 Crime Reporting & Verification System
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function registrationValidation() {
+        const aadhaarNo = document.getElementById('aadhaarNo').value;
+        const Address = document.getElementById('Address').value;
+        const LOC = document.getElementById('LOC').value;
+        const detailedDescription = document.getElementById('detailedDescription').value;
+        const idProof = document.getElementById('idProof').files[0];
+        const evidence = document.getElementById('evidence').files[0];
+        const typeCrime = document.getElementById('crimeType').value;
+        const crimeDate = document.getElementById('crimeDate').value;
+        let valid = false;
+
+        // Aadhaar validation
+        if (!/^\d{12}$/.test(aadhaarNo)) {
+          document.getElementById('aadhaarNoError').innerText = 'Invalid Aadhaar Number.';
+          valid = false;
+        } else {
+          document.getElementById('aadhaarNoError').innerText = '';
+          valid = true;
+        }
+
+        // Address validation
+        if (Address.trim().length < 10) {
+          document.getElementById('AddressError').innerText = 'Address too short.';
+          valid = false;
+        } else {
+          document.getElementById('AddressError').innerText = '';
+          valid = true;
+        }
+
+        // Location validation
+        if (LOC.trim().length < 5) {
+          document.getElementById('LOCError').innerText = 'Please provide a valid location.';
+          valid = false;
+        } else {
+          document.getElementById('LOCError').innerText = '';
+          valid = true;
+        }
+
+        // Description validation
+        if (detailedDescription.trim().length < 200) {
+          document.getElementById('descriptionError').innerText = 'Description must be at least 200 characters.';
+          valid = false;
+        } else {
+          document.getElementById('descriptionError').innerText = '';  
+          valid = true;
+        }
+
+        // ID Proof validation
+        if (!idProof || idProof.size > 5 * 1024 * 1024) {
+          document.getElementById('idProofError').innerText = 'ID Proof is required and must be less than 5MB.';
+          valid = false;
+        } else {
+          document.getElementById('idProofError').innerText = '';
+          valid = true;
+        }
+
+        // Evidence validation
+        if (!evidence || evidence.size > 10 * 1024 * 1024) {
+          document.getElementById('evidenceError').innerText = 'Evidence is required and must be less than 10MB.';
+          valid = false;
+        } else {
+          document.getElementById('evidenceError').innerText = '';
+          valid = true;
+        }
+        if(typeCrime === "") {
+          valid = false;
+          document.getElementById('crimeTypeError').innerText = 'Please select a crime type.';
+        } else {
+          document.getElementById('crimeTypeError').innerText = '';
+          valid = true;
+        }
+         
+        if(crimeDate === "") {
+          valid = false;
+          document.getElementById('crimeDateError').innerText = 'Please select date and time of crime.';
+        }
+        else if(new Date(crimeDate) > new Date()) {
+          valid = false;
+          document.getElementById('crimeDateError').innerText = 'Crime date cannot be in the future.';
+        } 
+        else {
+          document.getElementById('crimeDateError').innerText = '';
+          valid = true;
+        }
+        // add validation for other fields as needed
+        console.log(document.getElementById('crimeType').value);
+
+        const crimeType=document.getElementById('crimeType').value;
+        if(crimeType === "") {
+          document.getElementById('crimeTypeError').innerText = 'Please select a crime type.';
+          valid = false;
+        }
+        else{
+          valid = true;
+          document.getElementById('crimeTypeError').innerText = '';
+        }
+
+        if(crimeType === "financial") {
+            if(document.getElementById('bankName').value.trim() === "") {
+              document.getElementById('bankNameError').innerText = 'Bank name is required.';
+              valid = false;
+            } else {
+              document.getElementById('bankNameError').innerText = '';
+              valid = true;
+            }
+            if(document.getElementById('transactionId').value.trim() === "") {
+              document.getElementById('transactionIdError').innerText = 'Transaction ID is required.';
+              valid = false;
+            } else {
+              document.getElementById('transactionIdError').innerText = '';
+              valid = true;
+            }
+            if(document.getElementById('fraudAmount').value.trim() === "" || parseFloat(document.getElementById('fraudAmount').value) <= 0) {
+              document.getElementById('fraudAmountError').innerText = 'Please enter a valid fraud amount.';
+              valid = false;
+            } else {
+              document.getElementById('fraudAmountError').innerText = '';
+              valid = true;
+            }
+          } 
+          else if(crimeType === "cyber") {
+            if(document.getElementById('suspectProfile').value.trim() === "") {
+              document.getElementById('suspectProfileError').innerText = 'Suspect profile is required.';
+              valid = false;
+            } else {
+              document.getElementById('suspectProfileError').innerText = '';
+              valid = true;
+            }
+
+          } else if(crimeType === "women") {
+            if(document.getElementById('victimAge').value.trim() === "" || parseInt(document.getElementById('victimAge').value) <= 0) {
+              document.getElementById('victimAgeError').innerText = 'Please enter a valid age for the victim.';
+              valid = false;
+            } else {
+              document.getElementById('victimAgeError').innerText = '';
+              valid = true;
+            }
+            if(document.getElementById('relationship').value.trim() === "") {
+              document.getElementById('relationshipError').innerText = 'Relationship with complainant is required.';
+              valid = false;
+            } else {
+              document.getElementById('relationshipError').innerText = '';
+              valid = true;
+            }
+            if(document.getElementById('incidentType').value.trim() === "") {
+              document.getElementById('incidentTypeError').innerText = 'Please select an incident type.';
+              valid = false;
+            } else {
+              document.getElementById('incidentTypeError').innerText = '';
+              valid = true;
+            }
+          }
+          else if(crimeType === "theft") {
+            if(document.getElementById('theftType').value.trim() === "") {
+              document.getElementById('theftTypeError').innerText = 'Please select a theft type.';
+              valid = false;
+            } else {
+              document.getElementById('theftTypeError').innerText = '';
+              valid = true;
+            }
+            if(document.getElementById('suspectDescription').value.trim() === "") {
+              document.getElementById('suspectDescriptionError').innerText = 'Suspect description is required.';
+              valid = false;
+            } else {
+              document.getElementById('suspectDescriptionError').innerText = '';
+              valid = true;
+            }
+          }
+            console.log(document.getElementById('declarationCheckbox').checked);
+          if(document.getElementById('declarationCheckbox').checked === false) {
+            document.getElementById('declarationError').innerText = 'You must agree to the declaration.';
+            valid = false;
+          } else {
+            document.getElementById('declarationError').innerText = '';
+            valid = true;
+          }
+
+
+
+        if (valid) {
+          document.getElementById('submitBtn').disabled = false;
+        } else {
+          document.getElementById('submitBtn').disabled = true;
+        }
+      }
+
+
+      const checkbox = document.getElementById("agreeCheckbox");
+      const button = document.getElementById("acceptBtn");
+      const crimeType = document.getElementById('crimeType');
+      const sections = {
+        financial: document.getElementById('financialSection'),
+        cyber: document.getElementById('cyberSection'),
+        women: document.getElementById('womenSection'),
+        theft: document.getElementById('theftSection')
+      };
+
+      checkbox.addEventListener("change", () => {
+        button.disabled = !checkbox.checked;
+      });
+
+      crimeType.addEventListener('change', () => {
+        Object.values(sections).forEach(sec => sec.classList.add('hidden'));
+        if (sections[crimeType.value]) sections[crimeType.value].classList.remove('hidden');
+      });
+    </script>
+        <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var toastElements = document.querySelectorAll('.toast');
+        toastElements.forEach(function (toastElement) {
+            var toast = new bootstrap.Toast(toastElement, { delay: 5000 }); // Delay of 5 seconds
+            toast.show();
+        });
+    });
+</script>
+
+  </body>
+</html>

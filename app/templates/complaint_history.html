@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crime Reporting & Verification System</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* Custom Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    header {
+      background-color: #343a40;
+      color: white;
+      padding: 10px 0;
+    }
+
+    .navbar-brand h5 {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .navbar-brand img {
+      width: 60px;
+      height: 60px;
+      margin-right: 15px;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    main {
+      padding-top: 80px;
+    }
+
+    .container {
+      margin-top: 30px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .table thead {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: #f1f1f1;
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+    }
+
+    .table td {
+      font-size: 14px;
+    }
+
+    .table {
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .table td {
+      text-align: center;
+    }
+
+    .footer {
+      background-color: #343a40;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .footer a {
+      color: #f8f9fa;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    .status-pending {
+  background-color: #FFB84D !important;
+  font-weight: bold;
+  color: rgb(48, 47, 47) !important;
+  display: inline-block;      /* Keep it small */
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-left: 6px;
+  margin-right: 6px;             /* Center inside cell */
+  
+  border: 3px solid white;
+  border-radius: 5px;
+
+  font-weight: bold;
+  text-align: center;
+}
+
+.status-progress {
+  background-color: #0c3d6f !important;
+  font-weight: bold;
+  color: white !important;
+  display: inline-block;      /* Keep it small */
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-left: 6px;
+  margin-right: 6px;             /* Center inside cell */
+  
+  border: 3px solid white;
+  border-radius: 5px;
+
+  font-weight: bold;
+  text-align: center;
+}
+.status-completed {
+  background-color: #28a745 !important;
+  font-weight: bold;
+  color: white !important;
+  display: inline-block;      /* Keep it small */
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-left: 6px;
+  margin-right: 6px;             /* Center inside cell */
+  
+  border: 3px solid white;
+  border-radius: 5px;
+
+  font-weight: bold;
+  text-align: center;
+}
+.status-rejected {
+  background-color: #dc3545 !important;
+  font-weight: bold;
+  color: white !important;
+  display: inline-block;      /* Keep it small */
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-left: 6px;
+  margin-right: 6px;             /* Center inside cell */
+  
+  border: 3px solid white;
+  border-radius: 5px;
+
+  font-weight: bold;
+  text-align: center;
+}
+
+.ViewDetails:hover{
+  background-color: #13690a !important;
+  color: white !important;
+  border: none !important;
+  transition: background-color 0.3s !important;
+
+}
+
+  </style>
+</head>
+
+<body>
+  <!-- ===================== HEADER ===================== -->
+      <header>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+        <div class="container-fluid">
+          <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="Logo" width="80" height="80" class="d-inline-block align-text-top">
+            <div class="ms-2">
+              <h5 class="mb-0 fs-2">Crime Reporting & Verification System</h5>
+            </div>
+          </a>
+          <div class="ms-auto d-flex align-items-center">
+          <a class="btn btn-primary me-3" href="myprofile">🥷 MY PROFILE</a>
+          <a class="btn btn-primary me-3" href="logout">LOG OUT</a>
+        </div>
+        </div>
+      </nav>
+    </header>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main>
+    <div class="container">
+      <h3 class="text-center text-primary mb-4">My Complaints History</h3>
+      <table class="table table-striped table-bordered w-auto">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Date</th>
+            <th>Location of Crime</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in complaints %}
+          <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.fullname }}</td>
+            <td>{{ c.crimeDate }}</td>
+            <td>{{ c.LOC }}</td>
+            <td>{{ c.crimeType }}</td>
+            <td data-status="{{ c.status }}" style="">{{ c.status }}</td>
+            <td><button class="btn btn-sm btn-info ViewDetails" data-complaint-id="{{ c.id }}" data-bs-toggle="modal" data-bs-target="#complaintModal">View Details</button></td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" class="text-center text-muted">No complaints found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+      <div class="fixed-bottom text-center footer">
+        <p class="text-center text-black mb-0">© 2025 Crime Reporting & Verification System. All rights reserved.</p>
+      </div>
+    </footer>
+
+  <!-- ===================== FULLSCREEN MODAL FOR COMPLAINT DETAILS ===================== -->
+  <div class="modal fade" id="complaintModal" tabindex="-1" aria-labelledby="complaintModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="complaintModalLabel">Complaint Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="overflow-y: auto;">
+          <div id="modalContent">
+            <div class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1055;">
+        {% for category, message in messages %}
+            <div class="toast show align-items-center border-0 animate__animated animate__bounceInDown" role="alert" aria-live="assertive" aria-atomic="true">
+                {% if category == 'error' %}
+                    <div class="toast-body text-bg-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Error:</strong> {{ message }}
+                    </div>
+                {% elif category == 'success' %}
+                    <div class="toast-body text-bg-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Success:</strong> {{ message }}
+                    </div>
+                {% elif category == 'warning' %}
+                    <div class="toast-body text-bg-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> {{ message }}
+                    </div>
+                {% else %}
+                    <div class="toast-body text-bg-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Info:</strong> {{ message }}
+                    </div>
+                {% endif %}
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+
+  <!-- ===================== FOOTER ===================== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var toastElements = document.querySelectorAll('.toast');
+        toastElements.forEach(function (toastElement) {
+            var toast = new bootstrap.Toast(toastElement, { delay: 5000 }); // Delay of 5 seconds
+            toast.show();
+        });
+    });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const statusCells = document.querySelectorAll('td:nth-child(6)'); // Select all status cells (6th column)
+
+    statusCells.forEach(cell => {
+      const status = cell.getAttribute('data-status').trim().toLowerCase();
+
+      if (status === 'pending') {
+        cell.classList.add('status-pending');
+      }
+      else if (status === 'progress' || status === 'in progress') {
+        cell.classList.add('status-progress');
+      }
+        else if (status === 'completed') {
+            cell.classList.add('status-completed');
+        }
+        else if (status === 'rejected') {
+            cell.classList.add('status-rejected');
+        }
+    });
+
+    // Handle modal opening and fetching complaint details
+    const complaintModal = document.getElementById('complaintModal');
+    const viewDetailsButtons = document.querySelectorAll('.ViewDetails');
+
+    viewDetailsButtons.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const complaintId = this.getAttribute('data-complaint-id');
+        fetchComplaintDetails(complaintId);
+      });
+    });
+
+    function fetchComplaintDetails(complaintId) {
+      const modalContent = document.getElementById('modalContent');
+      
+      // Show loading spinner
+      modalContent.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+      // Fetch complaint details from API
+      fetch(`/api/complaintDetails/${complaintId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch complaint details');
+          }
+          return response.json();
+        })
+        .then(data => {
+          renderComplaintDetails(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          modalContent.innerHTML = '<div class="alert alert-danger">Failed to load complaint details. Please try again.</div>';
+        });
+    }
+
+    function renderComplaintDetails(data) {
+      const { complaint, evidence_img, idProof_img } = data;
+      const modalContent = document.getElementById('modalContent');
+
+      // Map crime type to readable name
+      const crimeTypeMap = {
+        'financial': 'Financial / Online Fraud',
+        'cyber': 'Cyber / Social Media Crime',
+        'women': 'Women / Children Related',
+        'theft': 'Theft / Physical Assault'
+      };
+
+      let html = `
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label"><strong>Full Name</strong></label>
+            <input type="text" class="form-control" value="${complaint.fullname || ''}" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>Email ID</strong></label>
+            <input type="email" class="form-control" value="${complaint.emailid || ''}" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>Mobile Number</strong></label>
+            <input type="tel" class="form-control" value="${complaint.phoneNo || ''}" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>Aadhaar Number</strong></label>
+            <input type="text" class="form-control" value="${complaint.aadhaarNo || ''}" readonly>
+          </div>
+          <div class="col-md-12">
+            <label class="form-label"><strong>Address</strong></label>
+            <textarea class="form-control" rows="2" readonly>${complaint.Address || ''}</textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>Date & Time of Crime</strong></label>
+            <input type="text" class="form-control" value="${complaint.crimeDate || ''}" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>Location of Crime</strong></label>
+            <input type="text" class="form-control" value="${complaint.LOC || ''}" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>Type of Crime</strong></label>
+            <input type="text" class="form-control" value="${crimeTypeMap[complaint.crimeType] || complaint.crimeType || ''}" readonly>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>Status</strong></label>
+            <input type="text" class="form-control" value="${complaint.status || ''}" readonly>
+          </div>
+          <div class="col-md-12">
+            <label class="form-label"><strong>Detailed Description</strong></label>
+            <textarea class="form-control" rows="4" readonly>${complaint.detailedDescription || ''}</textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>ID Proof</strong></label>
+            ${idProof_img ? `<div class="text-center"><img src="data:image/jpeg;base64,${idProof_img}" alt="ID Proof" class="img-fluid" style="max-height: 200px; max-width: 200px; border-radius: 8px;"></div>` : '<div class="alert alert-warning">No ID Proof image available</div>'}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label"><strong>Evidence</strong></label>
+            ${evidence_img ? `<div class="text-center"><img src="data:image/jpeg;base64,${evidence_img}" alt="Evidence" class="img-fluid" style="max-height: 200px; max-width: 200px; border-radius: 8px;"></div>` : '<div class="alert alert-warning">No Evidence image available</div>'}
+          </div>
+      `;
+
+      // Add dynamic sections based on crime type
+      if (complaint.crimeType === 'financial') {
+        html += `
+          <div class="col-md-12">
+            <h5 class="text-primary">💰 Financial / Online Fraud Details</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><strong>Bank / Wallet / Merchant Name</strong></label>
+                <input type="text" class="form-control" value="${complaint.bankName || ''}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><strong>Transaction ID / UTR Number</strong></label>
+                <input type="text" class="form-control" value="${complaint.transactionId || ''}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><strong>Fraud Amount (₹)</strong></label>
+                <input type="text" class="form-control" value="${complaint.fraudAmount || ''}" readonly>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (complaint.crimeType === 'cyber') {
+        html += `
+          <div class="col-md-12">
+            <h5 class="text-primary">🌐 Cyber / Social Media Crime Details</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><strong>Profile / URL of Suspect</strong></label>
+                <input type="text" class="form-control" value="${complaint.suspectProfile || ''}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><strong>Suspect Contact</strong></label>
+                <input type="text" class="form-control" value="${complaint.suspectContact || ''}" readonly>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (complaint.crimeType === 'women') {
+        html += `
+          <div class="col-md-12">
+            <h5 class="text-primary">👩‍🦰 Women / Children Related Details</h5>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label"><strong>Age of Victim</strong></label>
+                <input type="text" class="form-control" value="${complaint.victimAge || ''}" readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label"><strong>Relationship with Complainant</strong></label>
+                <input type="text" class="form-control" value="${complaint.relationship || ''}" readonly>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label"><strong>Incident Type</strong></label>
+                <input type="text" class="form-control" value="${complaint.incidentType || ''}" readonly>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (complaint.crimeType === 'theft') {
+        html += `
+          <div class="col-md-12">
+            <h5 class="text-primary">🚓 Theft / Physical Assault Details</h5>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label"><strong>Theft Type</strong></label>
+                <input type="text" class="form-control" value="${complaint.theftType || ''}" readonly>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label"><strong>Suspect Description</strong></label>
+                <input type="text" class="form-control" value="${complaint.suspectDescription || ''}" readonly>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      html += `</div>`;
+      modalContent.innerHTML = html;
+    }
+  });
+</script>
+</html>

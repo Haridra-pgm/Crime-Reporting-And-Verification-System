@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Staff Dashboard - Crime Reporting System</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            color: white !important;
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .navbar-brand img {
+            margin-right: 10px;
+            height: 50px;
+        }
+        
+        .navbar .btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar .btn:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        main {
+            margin-top: 100px;
+            padding-bottom: 100px;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .welcome-section h1 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-section p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .staff-name {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .card-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: none;
+            height: 100%;
+        }
+        
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .card-item .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .card-item .card-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .card-item .card-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .card-item .btn-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .card-item .btn-card:hover {
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .card-item .card-icon {
+            font-size: 40px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        footer p {
+            margin: 0;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 20px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            position: relative;
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                margin-top: 120px;
+            }
+            
+            .welcome-section h1 {
+                font-size: 24px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="Logo">
+                    <span>Crime Reporting System</span>
+                </a>
+                <div class="ms-auto d-flex gap-2">
+                    <button class="btn" disabled style="background: rgba(255,255,255,0.1); border: none;">
+                        <i class="fas fa-user"></i> {{ staff_name }}
+                    </button>
+                    <a class="btn" href="{{ url_for('staff_logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="container py-5">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1>👮 Welcome to Staff Portal</h1>
+                <p>Hello, <span class="staff-name">{{ staff_name }}</span>! Select an option below to manage complaints.</p>
+            </div>
+            
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                                <i class="fas fa-exclamation-circle"></i> {{ message }}
+                            </div>
+                        {% elif category == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                                <i class="fas fa-check-circle"></i> {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Feature Cards Grid -->
+            <div class="feature-grid">
+                
+                <!-- Card 1: Total Number of Complaints -->
+                <div class="feature-card">
+                    <div class="card-item">
+                        <div style="position: relative;">
+                            <img src="{{ url_for('static', filename='background/customercomplaintsjpg.jpg') }}" alt="Total Complaints">
+                            <div class="card-badge" style="background: #4c6ef5;">
+                                <i class="fas fa-chart-bar"></i> STATS
+                            </div>
+                        </div>
+                        <div class="card-body" style="background: linear-gradient(135deg, rgba(76, 110, 245, 0.05) 0%, rgba(76, 110, 245, 0.02) 100%);">
+                            <div class="card-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <h5 class="card-title">Total Number of Complaints</h5>
+                            <p class="card-description">View all pending and registered complaints in the system. Monitor complaint statistics and trends.</p>
+                            <a href="{{ url_for('total_complaints') }}" class="btn-card">
+                                <i class="fas fa-eye"></i> View All
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2: Update Status of Complaints -->
+                <div class="feature-card">
+                    <div class="card-item">
+                        <div style="position: relative;">
+                            <img src="{{ url_for('static', filename='background/update.png') }}" alt="Update Status">
+                            <div class="card-badge" style="background: #ff8787;">
+                                <i class="fas fa-sync-alt"></i> UPDATE
+                            </div>
+                        </div>
+                        <div class="card-body" style="background: linear-gradient(135deg, rgba(255, 135, 135, 0.05) 0%, rgba(255, 135, 135, 0.02) 100%);">
+                            <div class="card-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <h5 class="card-title">Update Status of Complaints</h5>
+                            <p class="card-description">Update complaint status (Pending → Verified → Resolved). Add remarks and track investigation progress.</p>
+                            <a href="{{ url_for('update_status') }}" class="btn-card">
+                                <i class="fas fa-edit"></i> Update
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 3: Rules and Regulations -->
+                <div class="feature-card">
+                    <div class="card-item">
+                        <div style="position: relative;">
+                            <img src="{{ url_for('static', filename='background/rules&regulation.jpg') }}" alt="Rules & Regulations">
+                            <div class="card-badge" style="background: #339af0;">
+                                <i class="fas fa-book"></i> GUIDELINES
+                            </div>
+                        </div>
+                        <div class="card-body" style="background: linear-gradient(135deg, rgba(51, 154, 240, 0.05) 0%, rgba(51, 154, 240, 0.02) 100%);">
+                            <div class="card-icon">
+                                <i class="fas fa-gavel"></i>
+                            </div>
+                            <h5 class="card-title">Rules & Regulations</h5>
+                            <p class="card-description">Review staff conduct guidelines, operational procedures, and compliance requirements for complaint handling.</p>
+                            <button type="button" class="btn-card" data-bs-toggle="modal" data-bs-target="#rulesModal">
+                                <i class="fas fa-book-open"></i> View Rules
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <p><i class="fas fa-shield-alt"></i> © 2025 Crime Reporting & Verification System. All rights reserved.</p>
+    </footer>
+    
+    <!-- Rules & Regulations Modal -->
+    <div class="modal fade" id="rulesModal" tabindex="-1" aria-labelledby="rulesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #339af0 0%, #339af0 100%); color: white;">
+                    <h5 class="modal-title" id="rulesModalLabel">
+                        <i class="fas fa-gavel"></i> Staff Rules & Regulations
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+                    <div style="padding: 20px;">
+                        <h6 style="color: #333; font-weight: 700; margin-top: 15px; margin-bottom: 10px;">
+                            <i class="fas fa-check-circle" style="color: #339af0;"></i> Code of Conduct
+                        </h6>
+                        <ul style="color: #666; font-size: 14px; line-height: 1.8;">
+                            <li>Maintain professional behavior and respect toward all complainants at all times.</li>
+                            <li>Treat all complaints with equal importance regardless of the complainant's social status.</li>
+                            <li>Avoid any form of discrimination, bias, or prejudice in complaint handling.</li>
+                            <li>Maintain strict confidentiality of sensitive information provided by complainants.</li>
+                            <li>Dress appropriately in official uniform or designated attire during duty hours.</li>
+                        </ul>
+
+                        <h6 style="color: #333; font-weight: 700; margin-top: 15px; margin-bottom: 10px;">
+                            <i class="fas fa-tasks" style="color: #339af0;"></i> Operational Procedures
+                        </h6>
+                        <ul style="color: #666; font-size: 14px; line-height: 1.8;">
+                            <li>Register all incoming complaints in the system within 24 hours of receipt.</li>
+                            <li>Verify complaint details with supporting documents and evidence before marking as verified.</li>
+                            <li>Provide updates on complaint status to the complainant within 48 hours.</li>
+                            <li>Follow the investigation hierarchy: Register → Verify → Investigate → Resolve.</li>
+                            <li>Document all actions and remarks in the complaint record with accurate timestamps.</li>
+                            <li>Escalate high-priority complaints (marked URGENT) to senior officers immediately.</li>
+                        </ul>
+
+                        <h6 style="color: #333; font-weight: 700; margin-top: 15px; margin-bottom: 10px;">
+                            <i class="fas fa-shield-alt" style="color: #339af0;"></i> Evidence & Documentation
+                        </h6>
+                        <ul style="color: #666; font-size: 14px; line-height: 1.8;">
+                            <li>Collect and preserve all physical and digital evidence according to legal standards.</li>
+                            <li>Maintain a chain of custody for all evidence collected.</li>
+                            <li>Upload supporting documents (ID proof, evidence photos, reports) to the system.</li>
+                            <li>Ensure all evidence is stored securely and is accessible only to authorized personnel.</li>
+                            <li>Label all evidence with case ID, date, and officer name.</li>
+                        </ul>
+
+                        <h6 style="color: #333; font-weight: 700; margin-top: 15px; margin-bottom: 10px;">
+                            <i class="fas fa-lock" style="color: #339af0;"></i> Data Security & Privacy
+                        </h6>
+                        <ul style="color: #666; font-size: 14px; line-height: 1.8;">
+                            <li>Never disclose your login credentials to anyone, including colleagues.</li>
+                            <li>Change your password every 90 days or when requested by administration.</li>
+                            <li>Log out from the system immediately after completing your work.</li>
+                            <li>Do not access complaint records unless authorized for that case.</li>
+                            <li>Report any suspicious activity or unauthorized access attempts immediately.</li>
+                        </ul>
+
+                        <h6 style="color: #333; font-weight: 700; margin-top: 15px; margin-bottom: 10px;">
+                            <i class="fas fa-exclamation-triangle" style="color: #ff6b6b;"></i> Prohibited Actions
+                        </h6>
+                        <ul style="color: #666; font-size: 14px; line-height: 1.8;">
+                            <li>Do not share confidential complaint information with unauthorized persons.</li>
+                            <li>Do not accept bribes or gifts in exchange for favorable complaint treatment.</li>
+                            <li>Do not manipulate or falsify complaint records and evidence.</li>
+                            <li>Do not use the system for personal gain or non-official purposes.</li>
+                            <li>Do not delay complaint processing without valid reason.</li>
+                            <li>Violation of these rules may result in disciplinary action.</li>
+                        </ul>
+
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #339af0;">
+                            <p style="color: #666; font-size: 13px; margin: 0;">
+                                <strong>Acknowledgment:</strong> By using this system, you acknowledge that you have read and understood these rules and regulations. Failure to comply may result in disciplinary action up to and including termination of employment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn" style="background: linear-gradient(135deg, #339af0 0%, #339af0 100%); color: white; border: none;">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Complaint - Staff Portal</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            margin-top: 100px;
+            margin-bottom: 150px;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1rem 0;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+        }
+        
+        .back-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 0;
+            border-radius: 0 0 15px 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-header h1 {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .complaint-details {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .detail-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+        
+        .detail-item p {
+            color: #333;
+            font-size: 15px;
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-verified {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-resolved {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-progress {
+            background: #e7d4f5;
+            color: #721c24;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .description-box {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .description-box h5 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .description-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+        
+        .form-section h5 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .progress-tracker {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+        
+        .progress-tracker h5 {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .progress-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .progress-step:last-child {
+            border-bottom: none;
+        }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-complete {
+            background: #51cf66;
+        }
+        
+        .step-current {
+            background: #667eea;
+        }
+        
+        .step-pending {
+            background: #adb5bd;
+        }
+        
+        .step-text h6 {
+            margin: 0 0 3px 0;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .step-text p {
+            margin: 0;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-complete {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .btn-complete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(81, 207, 102, 0.3);
+            color: white;
+        }
+        
+        .btn-reject {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .btn-reject:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            color: white;
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .btn-back {
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        
+        .btn-back:hover {
+            background: #d0d0d0;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .detail-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn-complete, .btn-reject {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a href="{{ url_for('update_status') }}" class="btn back-btn">
+                <i class="fas fa-arrow-left"></i> BACK
+            </a>
+            <div class="ms-auto">
+                <span style="color: white; font-weight: 600;">{{ staff_name }}</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container-fluid">
+            <h1><i class="fas fa-file-alt"></i> Update Complaint #{{ complaint[0] }}</h1>
+            <p>Review and update the status of this complaint</p>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-circle"></i> {{ message }}
+                        </div>
+                    {% elif category == 'success' %}
+                        <div class="alert alert-success" role="alert">
+                            <i class="fas fa-check-circle"></i> {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Complaint Details Section -->
+        <div class="complaint-details">
+            <h5 style="color: #667eea; margin-bottom: 20px; font-weight: 700;">
+                <i class="fas fa-info-circle"></i> Complaint Information
+            </h5>
+            
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Complaint ID</label>
+                    <p><strong>#{{ complaint[0] }}</strong></p>
+                </div>
+                <div class="detail-item">
+                    <label>Complainant Name</label>
+                    <p>{{ complaint[1] }}</p>
+                </div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Crime Date</label>
+                    <p>{{ complaint[2] }}</p>
+                </div>
+                <div class="detail-item">
+                    <label>Location</label>
+                    <p>{{ complaint[3] }}</p>
+                </div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-item">
+                    <label>Crime Type</label>
+                    <p>{{ complaint[4] }}</p>
+                </div>
+                <div class="detail-item">
+                    <label>Current Status</label>
+                    <div>
+                        {% if complaint[6] == 'Pending' %}
+                            <span class="status-badge status-pending"><i class="fas fa-clock"></i> Pending</span>
+                        {% elif complaint[6] == 'Verified' %}
+                            <span class="status-badge status-verified"><i class="fas fa-check"></i> Verified</span>
+                        {% elif complaint[6] == 'Resolved' %}
+                            <span class="status-badge status-resolved"><i class="fas fa-check-double"></i> Resolved</span>
+                        {% elif complaint[6] == 'Progress' %}
+                            <span class="status-badge status-progress"><i class="fas fa-spinner"></i> In Progress</span>
+                        {% elif complaint[6] == 'Rejected' %}
+                            <span class="status-badge status-rejected"><i class="fas fa-times"></i> Rejected</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Description Section -->
+        <div class="description-box">
+            <h5><i class="fas fa-file-alt"></i> Complaint Description & Details</h5>
+            <div class="description-content">
+                <p><strong>Details:</strong></p>
+                <p>{{ complaint[5] }}</p>
+                <hr>
+                <p style="font-size: 13px; color: #999; margin-bottom: 0;">
+                    <i class="fas fa-info-circle"></i> 
+                    Review the complete complaint details above before updating the status.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Progress Tracker -->
+        <div class="progress-tracker">
+            <h5><i class="fas fa-tasks"></i> Complaint Processing Status</h5>
+            
+            <div class="progress-step">
+                <div class="step-icon step-complete">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="step-text">
+                    <h6>Complaint Registered</h6>
+                    <p>Complaint was successfully registered in the system</p>
+                </div>
+            </div>
+            
+            <div class="progress-step">
+                <div class="step-icon {% if complaint[6] in ['Verified', 'Resolved', 'Progress'] %}step-complete{% elif complaint[6] == 'Pending' %}step-current{% else %}step-pending{% endif %}">
+                    <i class="fas fa-{% if complaint[6] in ['Verified', 'Resolved', 'Progress'] %}check{% elif complaint[6] == 'Pending' %}spinner{% else %}circle{% endif %}"></i>
+                </div>
+                <div class="step-text">
+                    <h6>Initial Review & Verification</h6>
+                    <p>Review complaint authenticity and conduct initial investigation</p>
+                </div>
+            </div>
+            
+            <div class="progress-step">
+                <div class="step-icon {% if complaint[6] in ['Resolved', 'Progress'] %}step-complete{% elif complaint[6] == 'Verified' %}step-current{% else %}step-pending{% endif %}">
+                    <i class="fas fa-{% if complaint[6] in ['Resolved', 'Progress'] %}check{% elif complaint[6] == 'Verified' %}spinner{% else %}circle{% endif %}"></i>
+                </div>
+                <div class="step-text">
+                    <h6>Investigation In Progress</h6>
+                    <p>Detailed investigation and evidence collection underway</p>
+                </div>
+            </div>
+            
+            <div class="progress-step">
+                <div class="step-icon {% if complaint[6] == 'Resolved' %}step-complete{% elif complaint[6] == 'Progress' %}step-current{% else %}step-pending{% endif %}">
+                    <i class="fas fa-{% if complaint[6] == 'Resolved' %}check{% elif complaint[6] == 'Progress' %}spinner{% else %}circle{% endif %}"></i>
+                </div>
+                <div class="step-text">
+                    <h6>Resolution & Closure</h6>
+                    <p>Case resolved with final report and closure</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Update Form -->
+        <form method="POST" action="{{ url_for('update_complaint', complaint_id=complaint[0]) }}" novalidate>
+            
+            <div class="form-section">
+                <h5><i class="fas fa-edit"></i> Update Complaint Status</h5>
+                
+                <div class="form-group">
+                    <label for="status">
+                        <i class="fas fa-tasks"></i> New Status *
+                    </label>
+                    <select id="status" name="status" required onchange="updateStatusDescription()">
+                        <option value="">-- Select New Status --</option>
+                        <option value="Pending" {% if complaint[6] == 'Pending' %}selected{% endif %}>
+                            <i class="fas fa-clock"></i> Pending - Awaiting Review
+                        </option>
+                        <option value="Progress" {% if complaint[6] == 'Progress' %}selected{% endif %}>
+                            <i class="fas fa-spinner"></i> In Progress - Under Investigation
+                        </option>
+                        <option value="Verified" {% if complaint[6] == 'Verified' %}selected{% endif %}>
+                            <i class="fas fa-check"></i> Verified - Authenticity Confirmed
+                        </option>
+                        <option value="Resolved" {% if complaint[6] == 'Resolved' %}selected{% endif %}>
+                            <i class="fas fa-check-double"></i> Resolved - Case Closed
+                        </option>
+                        <option value="Rejected">
+                            <i class="fas fa-times"></i> Rejected - Not Valid
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="remarks">
+                        <i class="fas fa-comment"></i> Remarks / Investigation Notes *
+                    </label>
+                    <textarea 
+                        id="remarks" 
+                        name="remarks" 
+                        placeholder="Add your remarks, investigation findings, or reason for rejection..."
+                        required
+                    ></textarea>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn-complete" name="action" value="complete">
+                    <i class="fas fa-check-circle"></i> MARK AS COMPLETED
+                </button>
+                <button type="submit" class="btn-reject" name="action" value="reject" onclick="return confirm('Are you sure you want to reject this complaint?');">
+                    <i class="fas fa-times-circle"></i> REJECT COMPLAINT
+                </button>
+                <a href="{{ url_for('update_status') }}" class="btn-back">
+                    <i class="fas fa-times"></i> CANCEL
+                </a>
+            </div>
+            
+        </form>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p><i class="fas fa-shield-alt"></i> © 2025 Crime Reporting & Verification System. All rights reserved.</p>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Update status description based on selection
+        function updateStatusDescription() {
+            const status = document.getElementById('status').value;
+            const descriptions = {
+                'Pending': 'Mark as Pending - Awaiting review and initial assessment',
+                'Progress': 'Mark as In Progress - Currently under active investigation',
+                'Verified': 'Mark as Verified - Complaint authenticity has been confirmed',
+                'Resolved': 'Mark as Resolved - Investigation completed and case closed',
+                'Rejected': 'Reject - Complaint is not valid or does not meet criteria'
+            };
+            
+            // Could display description if needed
+            console.log('Status: ' + status + ' - ' + descriptions[status]);
+        }
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const status = document.getElementById('status').value;
+            const remarks = document.getElementById('remarks').value.trim();
+            
+            if (!status || !remarks) {
+                e.preventDefault();
+                alert('Please select a status and add remarks');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crime Reporting & Verification System</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+
+      .card {
+        border-radius: 15px;
+        padding: 30px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #acceptBtn {
+        width: 200px;
+        font-weight: 600;
+        border-radius: 8px;
+      }
+
+      #acceptBtn:disabled {
+        background-color: #c0c0c0;
+        border: none;
+      }
+
+      .modal-content {
+        border-radius: 15px;
+        padding: 20px;
+      }
+
+      .form-label {
+        font-weight: 600;
+      }
+
+      .form-section {
+        margin-top: 25px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="text-center mt-4">
+      <h1 class="fw-bold text-primary">Crime Reporting & Verification System</h1>
+    </header>
+
+    <main class="container my-5">
+     <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title fw-bold">Complaint Detail</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Full Name * </label>
+                  <input type="text" class="form-control" required value="{{ complaint.fullname }}" readonly name="fullname">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Email ID * </label>
+                  <input type="email" class="form-control" required value="{{ complaint.emailid }}" readonly name="emailid">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Mobile Number *</label>
+                  <input type="tel" maxlength="10" class="form-control" required value="{{ complaint.phoneNo }}" readonly name="phoneNo">
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Aadhaar Number *</label>
+                  <input type="text" maxlength="12" class="form-control" required id="aadhaarNo" name="aadhaarNo" value="{{ complaint.aadhaarNo }}" readonly>
+                  <span class="text-danger fst-italic" id="aadhaarNoError"></span>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Address *</label>
+                  <textarea class="form-control" rows="2" required name="Address" id="Address" readonly>{{ complaint.Address }}</textarea>
+                  <span class="text-danger fst-italic" id="AddressError"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label required">Date & Time of Crime</label>
+                  <input type="text" class="form-control" id="crimeDate" required name="crimeDate" value="{{ complaint.crimeDate }}" readonly>
+                  <span class="text-danger fst-italic" id="crimeDateError"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Location of Crime *</label>
+                  <input type="text" class="form-control" required name="LOC" id="LOC" value="{{ complaint.LOC }}" readonly>
+                  <span class="text-danger fst-italic" id="LOCError"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Type of Crime *</label>
+                    <select class="form-select" id="crimeType" name="crimeType" required disabled>
+                    <option value="financial" {% if complaint.crimeType == 'financial' %}selected{% endif %}>Financial / Online Fraud</option>
+                    <option value="cyber" {% if complaint.crimeType == 'cyber' %}selected{% endif %}>Cyber / Social Media Crime</option>
+                    <option value="women" {% if complaint.crimeType == 'women' %}selected{% endif %}>Women / Children Related</option>
+                    <option value="theft" {% if complaint.crimeType == 'theft' %}selected{% endif %}>Theft / Physical Assault</option>
+                    </select>
+                  <span class="text-danger fst-italic" id="crimeTypeError"></span>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Detailed Description *</label>
+                  <textarea class="form-control" rows="4" minlength="10" required id="detailedDescription" name="detailedDescription" readonly>{{ complaint.detailedDescription }}</textarea>
+                  <span class="text-danger fst-italic" id="descriptionError"></span>
+                </div>
+                <div class="row g-3">
+
+                <!-- ID Proof -->
+                <div class="col-md-6">
+                    <label class="form-label">ID Proof (JPG/JPEG/PNG) *</label>
+
+                    {% if idProof_img %}
+                    <div class="mb-3 text-center">
+                        <img src="data:image/jpeg;base64,{{ idProof_img }}" 
+                            alt="ID Proof" 
+                            class="img-fluid"
+                            style="max-height: 200px; max-width: 200px; border-radius: 8px;">
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning">No ID Proof image available</div>
+                    {% endif %}
+
+                    <input type="hidden" id="idProof" name="idProof" value="{{ complaint.idProof_path }}">
+                </div>
+
+                <!-- Evidence -->
+                <div class="col-md-6">
+                    <label class="form-label">Evidence (Photos/Videos) *</label>
+
+                    {% if evidence_img %}
+                    <div class="mb-3 text-center">
+                        <img src="data:image/jpeg;base64,{{ evidence_img }}" 
+                            alt="Evidence"
+                            class="img-fluid"
+                            style="max-height: 200px; max-width: 200px; border-radius: 8px;">
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning">No Evidence image available</div>
+                    {% endif %}
+
+                    <input type="hidden" id="evidence" name="evidence" value="{{ complaint.evidence_path }}">
+                </div>
+
+                </div>
+
+              </div>
+
+              <!-- Dynamic sections -->
+              <div id="financialSection" class="form-section hidden">
+                <h5 class="text-primary">💰 Financial / Online Fraud</h5>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Bank / Wallet / Merchant Name" id="bankName" name="bankName">
+                    <samp class="text-danger fst-italic" id="bankNameError"></samp>
+                  </div>
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Transaction ID / UTR Number" id="transactionId" name="transactionId">
+                    <samp class="text-danger fst-italic" id="transactionIdError"></samp>
+                  </div>
+
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Fraud Amount (₹)" type="number" id="fraudAmount" name="fraudAmount">  
+                    <samp class="text-danger fst-italic" id="fraudAmountError"></samp>
+                  </div>
+                </div>
+              </div>
+
+              <div id="cyberSection" class="form-section hidden">
+                <h5 class="text-primary">🌐 Cyber / Social Media Crime</h5>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Profile / URL of Suspect" id="suspectProfile" name="suspectProfile">
+                    <samp class="text-danger fst-italic" id="suspectProfileError"></samp>
+                  </div>
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Suspect Contact (if known)" id="suspectContact" name="suspectContact">
+                    <samp class="text-danger fst-italic" id="suspectContactError"></samp>
+                  </div>
+                </div>
+              </div>
+
+              <div id="womenSection" class="form-section hidden">
+                <h5 class="text-primary">👩‍🦰 Women / Children Related</h5>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <input class="form-control" placeholder="Age of Victim" type="number" id="victimAge" name="victimAge">
+                    <samp class="text-danger fst-italic" id="victimAgeError"></samp>
+                  </div>
+                  <div class="col-md-4">
+                    <input class="form-control" placeholder="Relationship with Complainant" id="relationship" name="relationship">
+                    <samp class="text-danger fst-italic" id="relationshipError"></samp>
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-select" id="incidentType" name="incidentType">
+                      <option value="" selected disabled> select an option</option>
+                      <option>Harassment</option>
+                      <option>Abuse</option>
+                      <option>Exploitation</option>
+                      <option>Other</option>
+                    </select>
+                    <samp class="text-danger fst-italic" id="incidentTypeError"></samp>
+                  </div>
+                </div>
+              </div>
+
+              <div id="theftSection" class="form-section hidden">
+                <h5 class="text-primary">🚓 Theft / Physical Assault</h5>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <select class="form-select" id="theftType" name="theftType">
+                      <option value="" selected disabled> select an option</option>
+                      <option>Theft</option>
+                      <option>Robbery</option>
+                      <option>Assault</option>
+                    </select>
+                    <samp class="text-danger fst-italic" id="theftTypeError"></samp>
+                  </div>
+                  <div class="col-md-6">
+                    <input class="form-control" placeholder="Suspect Description (clothing, vehicle, etc.)" id="suspectDescription" name="suspectDescription">
+                    <samp class="text-danger fst-italic" id="suspectDescriptionError"></samp>
+                  </div>
+                </div>
+              </div>
+    </main>
+    <footer class="text-center mt-5 text-muted">
+      © 2025 Crime Reporting & Verification System
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Complaint data from backend
+      const complaint = {
+        bankName: "{{ complaint.bankName }}",
+        transactionId: "{{ complaint.transactionId }}",
+        fraudAmount: "{{ complaint.fraudAmount }}",
+        suspectProfile: "{{ complaint.suspectProfile }}",
+        suspectContact: "{{ complaint.suspectContact }}",
+        victimAge: "{{ complaint.victimAge }}",
+        relationship: "{{ complaint.relationship }}",
+        incidentType: "{{ complaint.incidentType }}",
+        theftType: "{{ complaint.theftType }}",
+        suspectDescription: "{{ complaint.suspectDescription }}"
+      };
+
+      const crimeType = document.getElementById('crimeType');
+      const sections = {
+        financial: document.getElementById('financialSection'),
+        cyber: document.getElementById('cyberSection'),
+        women: document.getElementById('womenSection'),
+        theft: document.getElementById('theftSection')
+      };
+
+      // Function to populate dynamic section fields
+      function populateDynamicFields() {
+        // Financial Section
+        const bankNameEl = document.getElementById('bankName');
+        const transactionIdEl = document.getElementById('transactionId');
+        const fraudAmountEl = document.getElementById('fraudAmount');
+        
+        if (bankNameEl) bankNameEl.value = complaint.bankName;
+        if (transactionIdEl) transactionIdEl.value = complaint.transactionId;
+        if (fraudAmountEl) fraudAmountEl.value = complaint.fraudAmount;
+
+        // Cyber Section
+        const suspectProfileEl = document.getElementById('suspectProfile');
+        const suspectContactEl = document.getElementById('suspectContact');
+        
+        if (suspectProfileEl) suspectProfileEl.value = complaint.suspectProfile;
+        if (suspectContactEl) suspectContactEl.value = complaint.suspectContact;
+
+        // Women Section
+        const victimAgeEl = document.getElementById('victimAge');
+        const relationshipEl = document.getElementById('relationship');
+        const incidentTypeEl = document.getElementById('incidentType');
+        
+        if (victimAgeEl) victimAgeEl.value = complaint.victimAge;
+        if (relationshipEl) relationshipEl.value = complaint.relationship;
+        if (incidentTypeEl) incidentTypeEl.value = complaint.incidentType;
+
+        // Theft Section
+        const theftTypeEl = document.getElementById('theftType');
+        const suspectDescriptionEl = document.getElementById('suspectDescription');
+        
+        if (theftTypeEl) theftTypeEl.value = complaint.theftType;
+        if (suspectDescriptionEl) suspectDescriptionEl.value = complaint.suspectDescription;
+      }
+
+      // Function to show/hide sections based on crime type
+      function toggleSections() {
+        Object.values(sections).forEach(sec => sec.classList.add('hidden'));
+        const selectedType = crimeType.value;
+        if (sections[selectedType]) {
+          sections[selectedType].classList.remove('hidden');
+        }
+      }
+
+      // Initialize on page load
+      document.addEventListener('DOMContentLoaded', () => {
+        populateDynamicFields();
+        toggleSections();
+      });
+
+      // Event listener for crime type change
+      crimeType.addEventListener('change', toggleSections);
+
+    </script>
+  </body>
+</html>

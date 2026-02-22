@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crime Reporting & Verification System</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='logo/logo.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+
+    <body>
+    <header>
+        <!-- Fixed-top navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{{ url_for('static', filename='logo/logo.png') }}" alt="Logo" width="80" height="80" class="d-inline-block align-text-top">
+            <div class="ms-2">
+                <h5 class="mb-0 fs-2">Crime Reporting & Verification System</h5>
+            </div>
+            </a>
+            <div class="ms-auto d-flex align-items-center">
+            <a class="btn btn-primary me-3" href="myprofile">🥷 MY PROFILE</a>
+            <a class="btn btn-primary me-3" href="logout">LOG OUT</a>
+            </div>
+        </div>
+        </nav>
+    </header>
+
+    <main style="margin-top: 80px;"> <!-- Space below fixed navbar -->
+        <div class="container py-5">
+        <div class="row g-4">
+
+            <div class="container py-3">
+            <p class="text-center fs-1 fw-bold">👥USER CORNER </p>
+        </div>
+
+            <!-- Card 1 -->
+            <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <img src="{{ url_for('static', filename='background/complaint.png') }}" class="card-img-top" alt="Register Your Complaint">
+                <div class="card-body text-center bg-primary text-white rounded-bottom">
+                <h5 class="card-title fw-bold">REGISTER YOUR COMPLAINT</h5>
+                <div class="d-flex justify-content-center gap-2 mt-3">
+                    <a href="registration" class="btn btn-light">Register</a>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <img src="{{ url_for('static', filename='background/tracking.png') }}" class="card-img-top" alt="TRACK YOUR COMPLAINT">
+                <div class="card-body text-center bg-info text-white rounded-bottom">
+                <h5 class="card-title fw-bold">TRACK YOUR COMPLAINT</h5>
+                <a href="complaint_tracking" class="btn btn-light mt-3">Track your Complaint</a>
+                </div>
+            </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <img src="{{ url_for('static', filename='background/his.jpg') }}" class="card-img-top" alt="COMPLAINT HISTORY">
+                <div class="card-body text-center bg-dark text-white rounded-bottom">
+                <h5 class="card-title fw-bold">COMPLAINT HISTORY</h5>
+                <a href="complainthistory" class="btn btn-primary mt-3">Check</a>
+                </div>
+            </div>
+            </div>
+
+        </div>
+        </div>
+
+        <div class="container py-3">
+            <p class="text-center fs-1 fw-bold">📚LEARNING CORNER </p>
+        </div>
+
+        <div class="container py-5">
+        <div class="row g-4">
+
+            <!-- Card 1 -->
+            <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <img src="{{ url_for('static', filename='background/manual.webp') }}" class="card-img-top" alt="CITIZEN MANUAL ">
+                <div class="card-body text-center bg-primary text-white rounded-bottom">
+                <h5 class="card-title fw-bold">CITIZEN MANUAL</h5>
+                <div class="d-flex justify-content-center gap-2 mt-3">
+                    <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#citizenManualModal">Read More</button>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <img src="{{ url_for('static', filename='background/safety.jpg') }}" class="card-img-top" alt="SAFETY TIPS">
+                <div class="card-body text-center bg-info text-white rounded-bottom">
+                <h5 class="card-title fw-bold">SAFETY TIPS</h5>
+                <button type="button" class="btn btn-light mt-3" data-bs-toggle="modal" data-bs-target="#safetyTipsModal">Read More</button>
+                </div>
+            </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <img src="{{ url_for('static', filename='background/crimeawarness.jpg') }}" class="card-img-top" alt="CRIME AWARENESS">
+                <div class="card-body text-center bg-dark text-white rounded-bottom">
+                <h5 class="card-title fw-bold">CRIME AWARENESS</h5>
+                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#crimeAwarenessModal">READ MORE</button>
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Modals -->
+    <!-- Safety Tips Modal -->
+    <div class="modal fade" id="safetyTipsModal" tabindex="-1" aria-labelledby="safetyTipsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="safetyTipsModalLabel">Safety Tips</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Personal Safety:</h6>
+                <ul>
+                    <li>Always stay alert and aware of your surroundings.</li>
+                    <li>Do not share personal information with strangers.</li>
+                    <li>Keep your doors locked when at home.</li>
+                    <li>Avoid walking alone at night, especially in unfamiliar areas.</li>
+                    <li>If you feel unsafe, trust your instincts and leave the area immediately.</li>
+                    <li>Walk in well-lit areas and avoid shortcuts through alleys or isolated places.</li>
+                    <li>Carry a phone with emergency contacts saved, and have a way to call for help if needed.</li>
+                    <li>Let someone know your whereabouts if you're going to a new place or meeting someone for the first time.</li>
+                    <li>Be cautious of your surroundings when using ATMs, especially at night or in quiet areas.</li>
+                    <li>If approached by someone suspicious, keep a safe distance and move to a populated area.</li>
+                </ul>
+                <h6>Online Safety:</h6>
+                <ul>
+                    <li>Use strong passwords for online accounts.</li>
+                    <li>Avoid clicking on suspicious links or emails.</li>
+                    <li>Enable two-factor authentication where possible.</li>
+                    <li>Be cautious when sharing personal information on social media. Avoid oversharing your whereabouts or plans.</li>
+                    <li>Monitor your financial accounts regularly for any unusual activity.</li>
+                    <li>Be wary of "phishing" scams that may trick you into providing personal information.</li>
+                    <li>Set privacy settings on social platforms to limit who can see your posts and personal details.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <!-- Crime Awareness Modal -->
+<div class="modal fade" id="crimeAwarenessModal" tabindex="-1" aria-labelledby="crimeAwarenessModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="crimeAwarenessModalLabel">Crime Awareness</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Understanding Crime Types:</h6>
+                <ul>
+                    <li>Violent crimes (e.g., assault, robbery, murder, domestic violence)</li>
+                    <li>Property crimes (e.g., burglary, vandalism, theft, car theft)</li>
+                    <li>Cybercrime (e.g., identity theft, hacking, phishing, online fraud)</li>
+                    <li>Drug-related offenses (e.g., trafficking, possession, distribution)</li>
+                    <li>White-collar crime (e.g., fraud, embezzlement, insider trading)</li>
+                    <li>Organized crime (e.g., gangs, human trafficking, illegal trade)</li>
+                </ul>
+
+                <h6>Recognizing Warning Signs:</h6>
+                <ul>
+                    <li>Unusual behavior in your neighborhood or workplace (e.g., frequent visitors at odd hours).</li>
+                    <li>Suspicious individuals or vehicles lingering in areas without clear reasons.</li>
+                    <li>Changes in the security or habits of your community, such as an increase in local thefts or break-ins.</li>
+                    <li>Increased cyber activity on your accounts that you do not recognize.</li>
+                    <li>Strange or inappropriate messages from unknown sources online (e.g., unsolicited requests for personal information).</li>
+                </ul>
+
+                <h6>Preventative Measures:</h6>
+                <ul>
+                    <li>Secure your home with quality locks, alarms, and lighting.</li>
+                    <li>Be cautious of sharing personal information, both in person and online.</li>
+                    <li>Invest in cybersecurity, such as using strong passwords and two-factor authentication.</li>
+                    <li>When driving, keep your car doors locked, and be cautious of strangers asking for help or information.</li>
+                    <li>Keep an eye out for your neighbors and community; consider joining or forming neighborhood watch programs.</li>
+                </ul>
+
+                <h6>What to Do if You Are a Victim of Crime:</h6>
+                <ul>
+                    <li>Immediately report the crime to local law enforcement. Provide as much detail as possible.</li>
+                    <li>Preserve evidence (e.g., take photos, keep receipts, retain messages) if applicable.</li>
+                    <li>Contact your bank and credit card companies if your financial information has been compromised.</li>
+                    <li>For online crime, report suspicious activity to the platform and consider filing a report with your local authorities.</li>
+                    <li>If you’re a victim of a violent crime, get medical help right away, even if the injuries seem minor.</li>
+                </ul>
+
+                <p>Being aware of crime patterns and knowing how to respond can help reduce your risk and keep your community safe. Always stay vigilant and trust your instincts if something feels off.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Citizen Manual Modal -->
+    <div class="modal fade" id="citizenManualModal" tabindex="-1" aria-labelledby="citizenManualModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="citizenManualModalLabel">Citizen Manual</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <p>Welcome to the Citizen Manual. This guide is designed to provide essential information and resources to help you navigate various aspects of civic engagement, safety, and personal responsibility. By following the principles outlined here, you will be better equipped to contribute to the well-being of your community, stay informed, and take proactive steps to ensure your own safety and the safety of those around you.</p>
+
+                    <iframe src="https://mediaeducationlab.com/sites/default/files/AML_H_unit3_0.pdf" width="100%" height="600px">
+    This browser does not support PDFs. Please download the PDF to view it: <a href="https://mediaeducationlab.com/sites/default/files/AML_H_unit3_0.pdf">Download PDF</a>.
+</iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+        </main>
+        <footer>
+            <div class="fixed-bottom text-center footer">
+                <p class="text-center text-black mb-0">© 2025 Crime Reporting & Verification System. All rights reserved.</p>
+            </div>
+        </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
