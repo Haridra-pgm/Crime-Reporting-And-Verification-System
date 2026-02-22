@@ -1,0 +1,80 @@
+ .navbar, .footer {
+      background-color:rgb(94, 222, 248) !important;
+    }
+
+.card-header {
+      background-color: rgb(85, 166, 228) !important;
+      color: black;
+
+    }
+
+.card {
+  border-radius: 20px;
+  overflow: hidden;
+  height: 100%; /* keeps uniform height across all cards */
+}
+
+/* Keep all images same height */
+.card-img-top {
+  height: 300px;
+  object-fit: cover;
+}
+
+/* Make card body uniform and align button at the bottom */
+.card-body {
+  min-height: 160px;  /* slightly taller footer area */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* title stays up, button at bottom */
+  align-items: center;
+  text-align: center;
+}
+
+/* Equal-size buttons */
+.card-body .btn {
+  width: 220px;       /* same width for all buttons */
+  height: 40px;       /* same height */
+  font-weight: 500;
+  border-radius: 8px; /* rounded for consistent look */
+}
+
+.card .btn {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ddd;
+  width: 200px;
+  height: 40px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.card .btn:hover {
+  background-color: #003feb;
+  color: whitesmoke; /* soft hover */
+}
+
+
+.btn-light:hover {
+  background-color: #003feb;
+}
+
+.card ul {
+  margin-top: 10px;
+}
+.card ul li {
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+.alert-info {
+  background-color: #e8f4ff;
+  border-left: 5px solid #0d6efd;
+}
+.text-primary {
+  color: #0056b3 !important;
+}
+
+.invalid-input {
+  border: 2px solid #ff6b6b !important;
+  background-color: #fff5f5;
+}
+
